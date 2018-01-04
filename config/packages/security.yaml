@@ -1,0 +1,31 @@
+security:
+    providers:
+        in_memory: { memory: ~ }
+
+        user_by_email:
+            entity:
+                class: App\Entity\User
+                property: email
+
+        user_by_token:
+            id: 'app.security.user_by_token_provider'
+
+        chain_provider:
+            chain:
+                providers: [user_by_token, user_by_email]
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            anonymous: ~
+            provider: chain_provider
+            guard:
+                authenticators: ['app.security.token_authenticator']
+
+    encoders:
+        App\Entity\User:
+            algorithm: bcrypt
+            cost: 12
