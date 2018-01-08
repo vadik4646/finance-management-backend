@@ -5,9 +5,11 @@ namespace App\Entity;
 use App\Utils\EntityField\CreatedAt;
 use App\Utils\EntityField\UpdatedAt;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\IncomeRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Income
 {
@@ -32,6 +34,8 @@ class Income
    * @var float
    *
    * @ORM\Column(type="float", precision=2)
+   * @Assert\NotBlank()
+   * @Assert\Type(type="float")
    */
   private $value;
 
@@ -40,6 +44,8 @@ class Income
    *
    * @ORM\ManyToOne(targetEntity="App\Entity\Currency")
    * @ORM\JoinColumn(referencedColumnName="code", name="currency_code")
+   * @Assert\NotBlank()
+   * @Assert\Currency()
    */
   private $currency;
 
@@ -47,6 +53,7 @@ class Income
    * @var Category|null
    *
    * @ORM\ManyToOne(targetEntity="App\Entity\Category")
+   * @Assert\NotBlank()
    */
   private $category;
 
@@ -61,6 +68,8 @@ class Income
    * @var \DateTime
    *
    * @ORM\Column(type="datetime")
+   * @Assert\NotBlank()
+   * @Assert\DateTime()
    */
   private $incomeAt;
 
@@ -75,7 +84,7 @@ class Income
   /**
    * @param mixed $id
    */
-  public function setId($id): void
+  public function setId($id)
   {
     $this->id = $id;
   }
@@ -83,7 +92,7 @@ class Income
   /**
    * @return float
    */
-  public function getValue(): float
+  public function getValue()
   {
     return $this->value;
   }
@@ -91,7 +100,7 @@ class Income
   /**
    * @param float $value
    */
-  public function setValue(float $value): void
+  public function setValue($value)
   {
     $this->value = $value;
   }
@@ -99,7 +108,7 @@ class Income
   /**
    * @return Currency|null
    */
-  public function getCurrency(): ?Currency
+  public function getCurrency()
   {
     return $this->currency;
   }
@@ -107,7 +116,7 @@ class Income
   /**
    * @param Currency|null $currency
    */
-  public function setCurrency(?Currency $currency): void
+  public function setCurrency($currency)
   {
     $this->currency = $currency;
   }
@@ -115,7 +124,7 @@ class Income
   /**
    * @return Category|null
    */
-  public function getCategory(): ?Category
+  public function getCategory()
   {
     return $this->category;
   }
@@ -123,7 +132,7 @@ class Income
   /**
    * @param Category|null $category
    */
-  public function setCategory(?Category $category): void
+  public function setCategory($category)
   {
     $this->category = $category;
   }
@@ -131,7 +140,7 @@ class Income
   /**
    * @return Tag[]
    */
-  public function getTags(): array
+  public function getTags()
   {
     return $this->tags;
   }
@@ -139,7 +148,7 @@ class Income
   /**
    * @param Tag[] $tags
    */
-  public function setTags(array $tags): void
+  public function setTags($tags)
   {
     $this->tags = $tags;
   }
@@ -147,7 +156,7 @@ class Income
   /**
    * @return \DateTime
    */
-  public function getIncomeAt(): \DateTime
+  public function getIncomeAt()
   {
     return $this->incomeAt;
   }
@@ -155,7 +164,7 @@ class Income
   /**
    * @param \DateTime $incomeAt
    */
-  public function setIncomeAt(\DateTime $incomeAt): void
+  public function setIncomeAt($incomeAt)
   {
     $this->incomeAt = $incomeAt;
   }
@@ -163,7 +172,7 @@ class Income
   /**
    * @return User
    */
-  public function getUser(): User
+  public function getUser()
   {
     return $this->user;
   }
@@ -171,7 +180,7 @@ class Income
   /**
    * @param User $user
    */
-  public function setUser(User $user): void
+  public function setUser($user)
   {
     $this->user = $user;
   }

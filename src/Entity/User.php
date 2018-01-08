@@ -13,6 +13,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity("email")
  */
 class User implements UserInterface, \Serializable, EquatableInterface
@@ -68,7 +69,7 @@ class User implements UserInterface, \Serializable, EquatableInterface
   /**
    * @return int
    */
-  public function getId(): int
+  public function getId()
   {
     return $this->id;
   }
@@ -76,7 +77,7 @@ class User implements UserInterface, \Serializable, EquatableInterface
   /**
    * @param int $id
    */
-  public function setId(int $id)
+  public function setId($id)
   {
     $this->id = $id;
   }
@@ -92,7 +93,7 @@ class User implements UserInterface, \Serializable, EquatableInterface
   /**
    * @param string $email
    */
-  public function setEmail(string $email)
+  public function setEmail($email)
   {
     $this->email = $email;
   }
@@ -108,7 +109,7 @@ class User implements UserInterface, \Serializable, EquatableInterface
   /**
    * @param string $plainPassword
    */
-  public function setPlainPassword(string $plainPassword)
+  public function setPlainPassword($plainPassword)
   {
     $this->plainPassword = $plainPassword;
   }
@@ -259,7 +260,7 @@ class User implements UserInterface, \Serializable, EquatableInterface
   /**
    * @param int $status
    */
-  public function setStatus(int $status)
+  public function setStatus($status)
   {
     $this->status = $status;
   }
@@ -267,7 +268,7 @@ class User implements UserInterface, \Serializable, EquatableInterface
   /**
    * @return \App\Service\Session\Session[]
    */
-  public function getSessions(): array
+  public function getSessions()
   {
     return $this->sessions;
   }

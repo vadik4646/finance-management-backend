@@ -41,6 +41,16 @@ class JsonRequest extends Request
 
   /**
    * @param string $key
+   * @param mixed  $value
+   * @return mixed|null
+   */
+  public function set($key, $value)
+  {
+    return $this->jsonContent[$key] = $value;
+  }
+
+  /**
+   * @param string $key
    * @return mixed|null
    */
   public function has($key)

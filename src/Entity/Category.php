@@ -6,9 +6,11 @@ use App\Annotation\Fetcher;
 use App\Utils\EntityField\CreatedAt;
 use App\Utils\EntityField\UpdatedAt;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Category
 {
@@ -27,6 +29,7 @@ class Category
    * @var string
    *
    * @ORM\Column(type="string", length=250)
+   * @Assert\NotBlank()
    * @Fetcher()
    */
   private $name;
@@ -50,7 +53,7 @@ class Category
   /**
    * @param mixed $id
    */
-  public function setId($id): void
+  public function setId($id)
   {
     $this->id = $id;
   }
@@ -58,7 +61,7 @@ class Category
   /**
    * @return string
    */
-  public function getName(): string
+  public function getName()
   {
     return $this->name;
   }
@@ -66,7 +69,7 @@ class Category
   /**
    * @param string $name
    */
-  public function setName(string $name): void
+  public function setName($name)
   {
     $this->name = $name;
   }
@@ -74,7 +77,7 @@ class Category
   /**
    * @return User|null
    */
-  public function getUser(): ?User
+  public function getUser()
   {
     return $this->user;
   }
@@ -82,7 +85,7 @@ class Category
   /**
    * @param User|null $user
    */
-  public function setUser(?User $user): void
+  public function setUser($user)
   {
     $this->user = $user;
   }

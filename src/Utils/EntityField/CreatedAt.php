@@ -5,9 +5,6 @@ namespace App\Utils\EntityField;
 use App\Annotation\Fetcher;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\HasLifecycleCallbacks()
- */
 trait CreatedAt
 {
   /**

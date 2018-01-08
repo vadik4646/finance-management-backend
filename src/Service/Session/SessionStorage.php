@@ -197,8 +197,8 @@ class SessionStorage implements SessionStorageInterface
     $this->session->setCreatedAt($this->metadataBag->createdAt);
     $this->session->setLastActionAt($this->metadataBag->lastActionAt);
 
-    $this->entityManager->persist($this->session);
-    $this->entityManager->flush();
+//    $this->entityManager->persist($this->session);
+//    $this->entityManager->flush();
   }
 
   /**

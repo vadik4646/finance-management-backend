@@ -5,9 +5,11 @@ namespace App\Entity;
 use App\Utils\EntityField\CreatedAt;
 use App\Utils\EntityField\UpdatedAt;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CurrencyRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Currency
 {
@@ -18,12 +20,15 @@ class Currency
    * @var string
    * @ORM\Id
    * @ORM\Column(type="string", length=3)
+   * @Assert\NotBlank()
+   * @Assert\Currency()
    */
   private $code;
 
   /**
    * @var string
    * @ORM\Column(type="string", length=100)
+   * @Assert\NotBlank()
    */
   private $name;
 
@@ -36,7 +41,7 @@ class Currency
   /**
    * @return string
    */
-  public function getCode(): string
+  public function getCode()
   {
     return $this->code;
   }
@@ -44,7 +49,7 @@ class Currency
   /**
    * @param string $code
    */
-  public function setCode(string $code): void
+  public function setCode($code)
   {
     $this->code = $code;
   }
@@ -52,7 +57,7 @@ class Currency
   /**
    * @return string
    */
-  public function getName(): string
+  public function getName()
   {
     return $this->name;
   }
@@ -60,7 +65,7 @@ class Currency
   /**
    * @param string $name
    */
-  public function setName(string $name): void
+  public function setName($name)
   {
     $this->name = $name;
   }
@@ -68,7 +73,7 @@ class Currency
   /**
    * @return Rate[]
    */
-  public function getRates(): array
+  public function getRates()
   {
     return $this->rates;
   }

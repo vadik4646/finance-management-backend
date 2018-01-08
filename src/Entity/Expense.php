@@ -5,11 +5,14 @@ namespace App\Entity;
 use App\Annotation\Fetcher;
 use App\Utils\EntityField\CreatedAt;
 use App\Utils\EntityField\UpdatedAt;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ExpenseRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Expense
 {
@@ -37,6 +40,8 @@ class Expense
    * @var float
    *
    * @ORM\Column(type="float", precision=2)
+   * @Assert\NotBlank()
+   * @Assert\Type(type="float")
    * @Fetcher()
    */
   private $value;
@@ -47,6 +52,7 @@ class Expense
    * @ORM\ManyToOne(targetEntity="App\Entity\Currency")
    * @ORM\JoinColumn(referencedColumnName="code", name="currency_code")
    * @Fetcher()
+   * @Assert\NotBlank()
    */
   private $currency;
 
@@ -54,6 +60,7 @@ class Expense
    * @var Category
    *
    * @ORM\ManyToOne(targetEntity="Category")
+   * @Assert\NotBlank()
    * @Fetcher()
    */
   private $category;
@@ -61,7 +68,7 @@ class Expense
   /**
    * @var Tag[]
    *
-   * @ORM\ManyToMany(targetEntity="App\Entity\Tag")
+   * @ORM\ManyToMany(targetEntity="App\Entity\Tag", inversedBy="expenses")
    * @Fetcher()
    */
   private $tags;
@@ -70,9 +77,16 @@ class Expense
    * @var DateTime
    *
    * @ORM\Column(type="datetime")
+   * @Assert\NotBlank()
+   * @Assert\DateTime()
    * @Fetcher()
    */
   private $spentAt;
+
+  public function __construct()
+  {
+    $this->tags = new ArrayCollection();
+  }
 
   /**
    * @return int
@@ -85,7 +99,7 @@ class Expense
   /**
    * @param int $id
    */
-  public function setId($id): void
+  public function setId($id)
   {
     $this->id = $id;
   }
@@ -93,7 +107,7 @@ class Expense
   /**
    * @return float
    */
-  public function getValue(): float
+  public function getValue()
   {
     return $this->value;
   }
@@ -101,7 +115,7 @@ class Expense
   /**
    * @param float $value
    */
-  public function setValue(float $value): void
+  public function setValue($value)
   {
     $this->value = $value;
   }
@@ -109,7 +123,7 @@ class Expense
   /**
    * @return Currency
    */
-  public function getCurrency(): Currency
+  public function getCurrency()
   {
     return $this->currency;
   }
@@ -117,7 +131,7 @@ class Expense
   /**
    * @param Currency $currency
    */
-  public function setCurrency(Currency $currency): void
+  public function setCurrency($currency)
   {
     $this->currency = $currency;
   }
@@ -125,7 +139,7 @@ class Expense
   /**
    * @return Category
    */
-  public function getCategory(): Category
+  public function getCategory()
   {
     return $this->category;
   }
@@ -133,7 +147,7 @@ class Expense
   /**
    * @param Category $category
    */
-  public function setCategory(Category $category): void
+  public function setCategory($category)
   {
     $this->category = $category;
   }
@@ -147,9 +161,17 @@ class Expense
   }
 
   /**
+   * @param Tag $tag
+   */
+  public function addTag(Tag $tag)
+  {
+    $this->tags->add($tag);
+  }
+
+  /**
    * @param Tag[] $tags
    */
-  public function setTags(array $tags): void
+  public function setTags($tags)
   {
     $this->tags = $tags;
   }
@@ -157,7 +179,7 @@ class Expense
   /**
    * @return DateTime
    */
-  public function getSpentAt(): DateTime
+  public function getSpentAt()
   {
     return $this->spentAt;
   }
@@ -165,7 +187,7 @@ class Expense
   /**
    * @param DateTime $spentAt
    */
-  public function setSpentAt(DateTime $spentAt): void
+  public function setSpentAt($spentAt)
   {
     $this->spentAt = $spentAt;
   }
@@ -173,7 +195,7 @@ class Expense
   /**
    * @return User
    */
-  public function getUser(): User
+  public function getUser()
   {
     return $this->user;
   }
@@ -181,7 +203,7 @@ class Expense
   /**
    * @param User $user
    */
-  public function setUser(User $user): void
+  public function setUser($user)
   {
     $this->user = $user;
   }

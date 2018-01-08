@@ -6,9 +6,11 @@ use App\Annotation\Fetcher;
 use App\Utils\EntityField\CreatedAt;
 use App\Utils\EntityField\UpdatedAt;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TagRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Tag
 {
@@ -27,9 +29,17 @@ class Tag
    * @var string
    *
    * @ORM\Column(type="string")
+   * @Assert\NotBlank()
    * @Fetcher()
    */
   private $value;
+
+  /**
+   * @var Expense[]
+   *
+   * @ORM\ManyToMany(targetEntity="App\Entity\Tag", mappedBy="tags")
+   */
+  private $expenses;
 
   /**
    * @var User|null
@@ -49,7 +59,7 @@ class Tag
   /**
    * @param mixed $id
    */
-  public function setId($id): void
+  public function setId($id)
   {
     $this->id = $id;
   }
@@ -57,7 +67,7 @@ class Tag
   /**
    * @return string
    */
-  public function getValue(): string
+  public function getValue()
   {
     return $this->value;
   }
@@ -65,7 +75,7 @@ class Tag
   /**
    * @param string $value
    */
-  public function setValue(string $value): void
+  public function setValue($value)
   {
     $this->value = $value;
   }
@@ -73,7 +83,7 @@ class Tag
   /**
    * @return User|null
    */
-  public function getUser(): ?User
+  public function getUser()
   {
     return $this->user;
   }
@@ -81,8 +91,25 @@ class Tag
   /**
    * @param User|null $user
    */
-  public function setUser(?User $user): void
+  public function setUser($user)
   {
     $this->user = $user;
   }
+
+  /**
+   * @return Expense[]
+   */
+  public function getExpenses()
+  {
+    return $this->expenses;
+  }
+
+  /**
+   * @param Expense[] $expenses
+   */
+  public function setExpenses($expenses)
+  {
+    $this->expenses = $expenses;
+  }
+
 }

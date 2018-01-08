@@ -6,9 +6,11 @@ use App\Utils\EntityField\CreatedAt;
 use App\Utils\EntityField\UpdatedAt;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RateRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Rate
 {
@@ -25,12 +27,16 @@ class Rate
   /**
    * @var DateTime
    * @ORM\Column(type="date", length=100)
+   * @Assert\NotBlank()
+   * @Assert\Date()
    */
   private $date;
 
   /**
    * @var float
    * @ORM\Column(type="float", length=8)
+   * @Assert\NotBlank()
+   * @Assert\Type(type="float")
    */
   private $value;
 
@@ -38,13 +44,15 @@ class Rate
    * @var Currency
    * @ORM\ManyToOne(targetEntity="Currency")
    * @ORM\JoinColumn(name="currency_code", referencedColumnName="code")
+   * @Assert\NotBlank()
+   * @Assert\Currency()
    */
   private $currency;
 
   /**
    * @return int
    */
-  public function getId(): int
+  public function getId()
   {
     return $this->id;
   }
@@ -52,7 +60,7 @@ class Rate
   /**
    * @param int $id
    */
-  public function setId(int $id): void
+  public function setId($id)
   {
     $this->id = $id;
   }
@@ -60,7 +68,7 @@ class Rate
   /**
    * @return DateTime
    */
-  public function getDate(): DateTime
+  public function getDate()
   {
     return $this->date;
   }
@@ -68,7 +76,7 @@ class Rate
   /**
    * @param DateTime $date
    */
-  public function setDate(DateTime $date): void
+  public function setDate($date)
   {
     $this->date = $date;
   }
@@ -76,7 +84,7 @@ class Rate
   /**
    * @return float
    */
-  public function getValue(): float
+  public function getValue()
   {
     return $this->value;
   }
@@ -84,7 +92,7 @@ class Rate
   /**
    * @param float $value
    */
-  public function setValue(float $value): void
+  public function setValue($value)
   {
     $this->value = $value;
   }
@@ -92,7 +100,7 @@ class Rate
   /**
    * @return Currency
    */
-  public function getCurrency(): Currency
+  public function getCurrency()
   {
     return $this->currency;
   }
@@ -100,7 +108,7 @@ class Rate
   /**
    * @param Currency $currency
    */
-  public function setCurrency(Currency $currency): void
+  public function setCurrency($currency)
   {
     $this->currency = $currency;
   }

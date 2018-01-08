@@ -102,7 +102,7 @@ class ApiResponse
     }
 
     foreach ($form->all() as $child) {
-      if (!$child->isValid()) {
+      if ($child->isSubmitted() && !$child->isValid()) {
         $errors[$child->getName()] = $this->getErrorMessages($child);
       }
     }
