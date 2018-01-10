@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Utils\EntityField\CreatedAt;
+use App\Annotation\Fetcher;
 use App\Utils\EntityField\UpdatedAt;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -20,6 +21,7 @@ class Income
    * @ORM\Id
    * @ORM\GeneratedValue
    * @ORM\Column(type="integer")
+   * @Fetcher()
    */
   private $id;
 
@@ -36,6 +38,7 @@ class Income
    * @ORM\Column(type="float", precision=2)
    * @Assert\NotBlank()
    * @Assert\Type(type="float")
+   * @Fetcher()
    */
   private $value;
 
@@ -45,6 +48,7 @@ class Income
    * @ORM\ManyToOne(targetEntity="App\Entity\Currency")
    * @ORM\JoinColumn(referencedColumnName="code", name="currency_code")
    * @Assert\NotBlank()
+   * @Fetcher()
    */
   private $currency;
 
@@ -53,6 +57,7 @@ class Income
    *
    * @ORM\ManyToOne(targetEntity="App\Entity\Category")
    * @Assert\NotBlank()
+   * @Fetcher()
    */
   private $category;
 
@@ -60,6 +65,7 @@ class Income
    * @var Tag[]
    *
    * @ORM\ManyToMany(targetEntity="App\Entity\Tag")
+   * @Fetcher()
    */
   private $tags;
 
@@ -69,6 +75,7 @@ class Income
    * @ORM\Column(type="datetime")
    * @Assert\NotBlank()
    * @Assert\DateTime()
+   * @Fetcher()
    */
   private $incomeAt;
 
