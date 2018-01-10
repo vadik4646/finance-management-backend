@@ -4,9 +4,9 @@ namespace App\Form;
 
 use App\Entity\Category;
 use App\Entity\Currency;
-use App\Entity\Expense;
 use App\Entity\Income;
 use App\Entity\Tag;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -31,6 +31,7 @@ class IncomeType extends AbstractType
     $builder
       ->add('value')
       ->add('currency', EntityType::class, ['class' => Currency::class])
+      ->add('user', EntityType::class, ['class' => User::class])
       ->add('category', EntityType::class, ['class' => Category::class])
       ->add('spentAt', DateTimeType::class, ['widget' => 'single_text', 'format' => 'dd-MM-yyyy HH:mm'])
       ->add('tags', EntityType::class, [
