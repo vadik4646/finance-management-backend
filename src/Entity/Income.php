@@ -45,7 +45,6 @@ class Income
    * @ORM\ManyToOne(targetEntity="App\Entity\Currency")
    * @ORM\JoinColumn(referencedColumnName="code", name="currency_code")
    * @Assert\NotBlank()
-   * @Assert\Currency()
    */
   private $currency;
 

@@ -31,8 +31,8 @@ class IncomeType extends AbstractType
     $builder
       ->add('value')
       ->add('currency', EntityType::class, ['class' => Currency::class])
-      ->add('user', EntityType::class, ['class' => User::class])
       ->add('category', EntityType::class, ['class' => Category::class])
+      ->add('user', EntityType::class, ['class' => User::class])
       ->add('incomeAt', DateTimeType::class, ['widget' => 'single_text', 'format' => 'dd-MM-yyyy HH:mm'])
       ->add('tags', EntityType::class, [
         'class' => Tag::class,
