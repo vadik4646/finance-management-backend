@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Api;
 
 use App\Entity\User;
 use App\Form\UserType;
@@ -9,18 +9,12 @@ use App\Service\ApiResponse;
 use App\Service\JsonRequest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class SecurityController extends Controller
 {
   /**
-   * @Route("/login", name="login", methods={"POST"})
-   * @param JsonRequest                  $request
-   * @param UserRepository               $userRepository
-   * @param UserPasswordEncoderInterface $passwordEncoder
-   * @param ApiResponse                  $response
-   * @return \Symfony\Component\HttpFoundation\JsonResponse
+   * @Route("/login", name="login", methods={"POST"})]
    */
   public function loginAction(
     JsonRequest $request,
@@ -41,10 +35,6 @@ class SecurityController extends Controller
 
   /**
    * @Route("/register", name="register", methods={"POST"})
-   * @param JsonRequest                  $request
-   * @param UserPasswordEncoderInterface $passwordEncoder
-   * @param ApiResponse                  $response
-   * @return Response
    */
   public function registerAction(JsonRequest $request, UserPasswordEncoderInterface $passwordEncoder, ApiResponse $response) {
     $user = new User();
