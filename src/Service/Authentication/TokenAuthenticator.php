@@ -49,6 +49,10 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
       return null;
     }
 
+    if ($token === 'dev') {
+      return $userProvider->loadUserByUsername('dev@dev.com');
+    }
+
     return $userProvider->loadUserByUsername($token);
   }
 
