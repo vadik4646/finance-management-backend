@@ -77,7 +77,7 @@ class Session
   /**
    * @param mixed $id
    */
-  public function setId($id): void
+  public function setId($id)
   {
     $this->id = $id;
   }
@@ -93,7 +93,7 @@ class Session
   /**
    * @param User|null $user
    */
-  public function setUser(User $user = null): void
+  public function setUser(User $user = null)
   {
     $this->user = $user;
   }
@@ -101,7 +101,7 @@ class Session
   /**
    * @return string
    */
-  public function getIp(): string
+  public function getIp()
   {
     return $this->ip;
   }
@@ -109,7 +109,7 @@ class Session
   /**
    * @param string $ip
    */
-  public function setIp(string $ip): void
+  public function setIp($ip)
   {
     $this->ip = $ip;
   }
@@ -117,7 +117,7 @@ class Session
   /**
    * @return bool
    */
-  public function isActive(): bool
+  public function isActive()
   {
     return $this->isActive;
   }
@@ -125,7 +125,7 @@ class Session
   /**
    * @param bool $isActive
    */
-  public function setIsActive(bool $isActive): void
+  public function setIsActive($isActive)
   {
     $this->isActive = $isActive;
   }
@@ -133,7 +133,7 @@ class Session
   /**
    * @return string
    */
-  public function getCountryCode(): string
+  public function getCountryCode()
   {
     return $this->countryCode;
   }
@@ -141,7 +141,7 @@ class Session
   /**
    * @param string $countryCode
    */
-  public function setCountryCode(string $countryCode): void
+  public function setCountryCode($countryCode)
   {
     $this->countryCode = $countryCode;
   }
@@ -149,7 +149,7 @@ class Session
   /**
    * @return \DateTime
    */
-  public function getCreatedAt(): \DateTime
+  public function getCreatedAt()
   {
     return $this->createdAt;
   }
@@ -157,7 +157,7 @@ class Session
   /**
    * @param \DateTime $createdAt
    */
-  public function setCreatedAt(\DateTime $createdAt): void
+  public function setCreatedAt($createdAt)
   {
     $this->createdAt = $createdAt;
   }
@@ -165,7 +165,7 @@ class Session
   /**
    * @return \DateTime
    */
-  public function getLastActionAt(): \DateTime
+  public function getLastActionAt()
   {
     return $this->last_action_at;
   }
@@ -173,7 +173,7 @@ class Session
   /**
    * @param \DateTime $last_action_at
    */
-  public function setLastActionAt(\DateTime $last_action_at): void
+  public function setLastActionAt($last_action_at)
   {
     $this->last_action_at = $last_action_at;
   }
@@ -186,7 +186,7 @@ class Session
   /**
    * @return object
    */
-  public function getAttributesBag(): object
+  public function getAttributesBag()
   {
     return json_decode($this->attributes_bag);
   }
@@ -194,7 +194,7 @@ class Session
   /**
    * @param AttributeBag $attributes_bag
    */
-  public function setAttributesBag(AttributeBag $attributes_bag = null): void
+  public function setAttributesBag($attributes_bag = null)
   {
     $this->attributes_bag = json_encode($attributes_bag);
   }
@@ -202,7 +202,7 @@ class Session
   /**
    * @return object
    */
-  public function getFlashBag(): object
+  public function getFlashBag()
   {
     return json_decode($this->flash_bag);
   }
@@ -210,7 +210,7 @@ class Session
   /**
    * @param FlashBag $flash_bag
    */
-  public function setFlashBag(FlashBag $flash_bag = null): void
+  public function setFlashBag($flash_bag = null)
   {
     $this->flash_bag = json_encode($flash_bag);
   }
