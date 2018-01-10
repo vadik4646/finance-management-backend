@@ -33,7 +33,7 @@ class IncomeType extends AbstractType
       ->add('currency', EntityType::class, ['class' => Currency::class])
       ->add('user', EntityType::class, ['class' => User::class])
       ->add('category', EntityType::class, ['class' => Category::class])
-      ->add('spentAt', DateTimeType::class, ['widget' => 'single_text', 'format' => 'dd-MM-yyyy HH:mm'])
+      ->add('incomeAt', DateTimeType::class, ['widget' => 'single_text', 'format' => 'dd-MM-yyyy HH:mm'])
       ->add('tags', EntityType::class, [
         'class' => Tag::class,
         'allow_extra_fields' => true,
