@@ -6,6 +6,7 @@ use App\Entity\Category;
 use App\Entity\Currency;
 use App\Entity\Expense;
 use App\Entity\Tag;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -31,6 +32,7 @@ class ExpenseType extends AbstractType
       ->add('value')
       ->add('currency', EntityType::class, ['class' => Currency::class])
       ->add('category', EntityType::class, ['class' => Category::class])
+      ->add('user', EntityType::class, ['class' => User::class])
       ->add('spentAt', DateTimeType::class, ['widget' => 'single_text', 'format' => 'dd-MM-yyyy HH:mm'])
       ->add('tags', EntityType::class, [
         'class' => Tag::class,

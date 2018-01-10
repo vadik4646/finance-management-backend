@@ -46,6 +46,7 @@ class IncomeController extends Controller
   {
     $tagsIdMap = $this->getTagIdMap($request->get('tags'), $entityManager);
     $request->set('tags', $tagsIdMap);
+    $request->set('user', $this->getUser()->getId());
 
     $income = new Income();
     $form = $this->createForm(IncomeType::class, $income);
@@ -66,19 +67,23 @@ class IncomeController extends Controller
    */
   public function edit($id, JsonRequest $request, ApiResponse $apiResponse, EntityManagerInterface $entityManager)
   {
-    $expense = $entityManager->getRepository(Income::class)->find($id);
+    $income = $entityManager->getRepository(Income::class)->find($id);
+
+    if (!$income || !$this->getUser()->isEqualTo($income->getUser())) {
+      return $apiResponse->setMessage('Income not found')->setCode(ApiResponse::HTTP_NOT_FOUND)->send();
+    }
 
     $tagsIdMap = $this->getTagIdMap($request->get('tags'), $entityManager);
-    $request->set('tags', $tagsIdMap); // todo creator
+    $request->set('tags', $tagsIdMap);
 
-    $form = $this->createForm(IncomeType::class, $expense);
+    $form = $this->createForm(IncomeType::class, $income);
     $form->submit($request->all());
 
     if (!$form->isValid()) {
       return $apiResponse->setValidationErrors($form)->send();
     }
 
-    $entityManager->persist($expense);
+    $entityManager->persist($income);
     $entityManager->flush();
 
     return $apiResponse->setMessage('Income updated')->send();
@@ -89,9 +94,13 @@ class IncomeController extends Controller
    */
   public function delete(JsonRequest $request, ApiResponse $apiResponse, EntityManagerInterface $entityManager)
   {
-    $expense = $entityManager->getRepository(Income::class)->find($request->get('id'));
+    $income = $entityManager->getRepository(Income::class)->find($request->get('id'));
 
-    $entityManager->remove($expense);
+    if (!$income || !$this->getUser()->isEqualTo($income->getUser())) {
+      return $apiResponse->setMessage('Income not found')->setCode(ApiResponse::HTTP_NOT_FOUND)->send();
+    }
+
+    $entityManager->remove($income);
     $entityManager->flush();
 
     return $apiResponse->setMessage('Income deleted')->send();

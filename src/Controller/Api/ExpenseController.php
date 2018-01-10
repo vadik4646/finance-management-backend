@@ -45,7 +45,8 @@ class ExpenseController extends Controller
   public function create(JsonRequest $request, ApiResponse $apiResponse, EntityManagerInterface $entityManager)
   {
     $tagsIdMap = $this->getTagIdMap($request->get('tags'), $entityManager);
-    $request->set('tags', $tagsIdMap); // todo creator
+    $request->set('tags', $tagsIdMap);
+    $request->set('user', $this->getUser()->getId());
 
     $expense = new Expense();
     $form = $this->createForm(ExpenseType::class, $expense);
@@ -67,9 +68,13 @@ class ExpenseController extends Controller
   public function edit($id, JsonRequest $request, ApiResponse $apiResponse, EntityManagerInterface $entityManager)
   {
     $expense = $entityManager->getRepository(Expense::class)->find($id);
+    if (!$expense || !$this->getUser()->isEqualTo($expense->getUser())) {
+      return $apiResponse->setMessage('Expense not found')->setCode(ApiResponse::HTTP_NOT_FOUND)->send();
+    }
 
     $tagsIdMap = $this->getTagIdMap($request->get('tags'), $entityManager);
-    $request->set('tags', $tagsIdMap); // todo creator
+    $request->set('tags', $tagsIdMap);
+    $request->set('user', $this->getUser()->getId());
 
     $form = $this->createForm(ExpenseType::class, $expense);
     $form->submit($request->all());
@@ -90,6 +95,10 @@ class ExpenseController extends Controller
   public function delete(JsonRequest $request, ApiResponse $apiResponse, EntityManagerInterface $entityManager)
   {
     $expense = $entityManager->getRepository(Expense::class)->find($request->get('id'));
+
+    if (!$expense || !$this->getUser()->isEqualTo($expense->getUser())) {
+      return $apiResponse->setMessage('Expense not found')->setCode(ApiResponse::HTTP_NOT_FOUND)->send();
+    }
 
     $entityManager->remove($expense);
     $entityManager->flush();
