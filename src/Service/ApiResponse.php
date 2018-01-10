@@ -60,13 +60,11 @@ class ApiResponse
       $response['message'] = $this->message;
     }
 
-    if ($this->data) {
-      $response['data'] = $this->data;
-    }
-
     if ($this->validationErrors) {
       $response['validationErrors'] = $this->validationErrors;
     }
+
+    $response['data'] = $this->data;
 
     return new JsonResponse(
       $response,

@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Category;
 use App\Entity\Currency;
 use App\Entity\Expense;
+use App\Entity\Income;
 use App\Entity\Tag;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -14,7 +15,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class ExpenseType extends AbstractType
+class IncomeType extends AbstractType
 {
   private $entityManager;
   private $tokenStorage;
@@ -43,7 +44,7 @@ class ExpenseType extends AbstractType
   {
     $resolver->setDefaults(
       [
-        'data_class'         => Expense::class,
+        'data_class'         => Income::class,
         'allow_extra_fields' => true,
         'allow_add'          => true
       ]

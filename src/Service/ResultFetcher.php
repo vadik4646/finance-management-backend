@@ -4,7 +4,7 @@ namespace App\Service;
 
 use App\Annotation\Fetcher;
 use Doctrine\Common\Annotations\Reader;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -37,7 +37,7 @@ class ResultFetcher
    */
   private function fetch($result)
   {
-    if (is_array($result) || $result instanceof ArrayCollection) {
+    if (is_array($result) || $result instanceof Collection) {
       $rows = [];
       foreach ($result as $row) {
         $rows[] = $this->fetch($row);

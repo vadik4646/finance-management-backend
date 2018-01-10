@@ -2,12 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\Category;
 use App\Entity\Expense;
 use App\Entity\Tag;
-use App\Entity\User;
 use App\Form\ExpenseType;
-use App\Repository\CategoryRepository;
 use App\Repository\ExpenseRepository;
 use App\Service\ApiResponse;
 use App\Service\JsonRequest;
@@ -47,8 +44,8 @@ class ExpenseController extends Controller
    */
   public function create(JsonRequest $request, ApiResponse $apiResponse, EntityManagerInterface $entityManager)
   {
-    $tagsIdMap = $this->createNewTags($request->get('tags'), $entityManager);
-    $request->set('tags', $tagsIdMap);
+    $tagsIdMap = $this->getTagIdMap($request->get('tags'), $entityManager);
+    $request->set('tags', $tagsIdMap); // todo creator
 
     $expense = new Expense();
     $form = $this->createForm(ExpenseType::class, $expense);
@@ -64,19 +61,51 @@ class ExpenseController extends Controller
     return $apiResponse->setMessage('Expense created')->send();
   }
 
-  private function createNewTags($rawTags, EntityManagerInterface $entityManager)
+  /**
+   * @Route("/expense/edit/{id}", name="edit_expense", methods={"POST"})
+   */
+  public function edit($id, JsonRequest $request, ApiResponse $apiResponse, EntityManagerInterface $entityManager)
   {
-    $existingIdMap = array_filter($rawTags, 'is_numeric');
-    $newTags = array_diff($rawTags, $existingIdMap);
-    $user = $this->getUser();
-    $user = $user instanceof User ? $user : null;
-    $tags = $entityManager->getRepository(Tag::class)->createOrGetExisting($newTags, $user);
+    $expense = $entityManager->getRepository(Expense::class)->find($id);
 
-    $newIdMap = [];
-    foreach ($tags as $tag) {
-      $newIdMap[] = $tag->getId();
+    $tagsIdMap = $this->getTagIdMap($request->get('tags'), $entityManager);
+    $request->set('tags', $tagsIdMap); // todo creator
+
+    $form = $this->createForm(ExpenseType::class, $expense);
+    $form->submit($request->all());
+
+    if (!$form->isValid()) {
+      return $apiResponse->setValidationErrors($form)->send();
     }
 
-    return array_merge($existingIdMap, $newIdMap);
+    $entityManager->persist($expense);
+    $entityManager->flush();
+
+    return $apiResponse->setMessage('Expense updated')->send();
+  }
+
+  /**
+   * @Route("/expense/delete", name="delete_expense", methods={"POST"})
+   */
+  public function delete(JsonRequest $request, ApiResponse $apiResponse, EntityManagerInterface $entityManager)
+  {
+    $expense = $entityManager->getRepository(Expense::class)->find($request->get('id'));
+
+    $entityManager->remove($expense);
+    $entityManager->flush();
+
+    return $apiResponse->setMessage('Expense deleted')->send();
+  }
+
+  private function getTagIdMap($rawTags, EntityManagerInterface $entityManager)
+  {
+    $tags = $entityManager->getRepository(Tag::class)->createOrGetExisting($rawTags, $this->getUser());
+
+    $tagIdMap = [];
+    foreach ($tags as $tag) {
+      $tagIdMap[] = $tag->getId();
+    }
+
+    return $tagIdMap;
   }
 }

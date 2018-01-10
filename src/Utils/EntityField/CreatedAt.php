@@ -17,7 +17,7 @@ trait CreatedAt
   /**
    * @return \DateTime
    */
-  public function getCreatedAt(): \DateTime
+  public function getCreatedAt()
   {
     return $this->createdAt;
   }
@@ -25,7 +25,7 @@ trait CreatedAt
   /**
    * @param \DateTime $createdAt
    */
-  public function setCreatedAt(\DateTime $createdAt): void
+  public function setCreatedAt(\DateTime $createdAt)
   {
     $this->createdAt = $createdAt;
   }
