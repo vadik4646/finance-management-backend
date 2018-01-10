@@ -13,7 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class ExpenseController extends Controller
+class IncomeController extends Controller
 {
   /**
    * @Route("/income", name="user_incomes", methods={"GET"})
