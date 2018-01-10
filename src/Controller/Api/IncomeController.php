@@ -75,6 +75,7 @@ class IncomeController extends Controller
 
     $tagsIdMap = $this->getTagIdMap($request->get('tags'), $entityManager);
     $request->set('tags', $tagsIdMap);
+    $request->set('user', $this->getUser()->getId());
 
     $form = $this->createForm(IncomeType::class, $income);
     $form->submit($request->all());
