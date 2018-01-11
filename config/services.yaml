@@ -79,7 +79,7 @@ services:
     app.event_listener.cors_header_sender:
         class: App\EventListener\CorsHeader
         tags:
-            - { name: kernel.event_listener, event: kernel.request }
+            - { name: kernel.event_listener, event: kernel.response }
 
     app.event_listener.session_saver:
         class: App\EventListener\SessionSaver

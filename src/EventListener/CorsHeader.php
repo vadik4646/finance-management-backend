@@ -2,23 +2,19 @@
 
 namespace App\EventListener;
 
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
 class CorsHeader
 {
   /**
-   * @param GetResponseEvent $event
+   * @param FilterResponseEvent $event
    */
-  public function onKernelRequest(GetResponseEvent $event)
+  public function onKernelResponse(FilterResponseEvent $event)
   {
-    if ($_SERVER["REQUEST_METHOD"] == "OPTIONS") {
-      $response = new Response();
-      $response->headers->set('Access-Control-Allow-Headers', 'origin, content-type, accept, X-AUTH-TOKEN');
-      $response->headers->set('Access-Control-Allow-Origin', '*');
-      $response->headers->set('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, PATCH, OPTIONS');
-
-      $event->setResponse($response);
-    }
+    //    if ($_SERVER["REQUEST_METHOD"] == "OPTIONS") {
+    //      $response = new Response();
+    $event->getResponse()->headers->set('Access-Control-Allow-Headers', 'origin, content-type, accept, X-AUTH-TOKEN');
+    $event->getResponse()->headers->set('Access-Control-Allow-Origin', '*');
+    $event->getResponse()->headers->set('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, PATCH, OPTIONS');
   }
 }
