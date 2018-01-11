@@ -44,13 +44,8 @@ class IncomeController extends Controller
    */
   public function create(JsonRequest $request, ApiResponse $apiResponse, EntityManagerInterface $entityManager)
   {
-    $tagsIdMap = $this->getTagIdMap($request->get('tags'), $entityManager);
-    $request->set('tags', $tagsIdMap);
-    $request->set('user', $this->getUser()->getId());
-
     $income = new Income();
-    $form = $this->createForm(IncomeType::class, $income);
-    $form->submit($request->all());
+    $form = $this->createAndHandleForm($income, $request->all(), $entityManager);
 
     if (!$form->isValid()) {
       return $apiResponse->setValidationErrors($form)->send();
@@ -60,6 +55,22 @@ class IncomeController extends Controller
     $entityManager->flush();
 
     return $apiResponse->setMessage('Income created')->send();
+  }
+
+  /**
+   * @Route("/income/import", name="import_income", methods={"POST"})
+   */
+  public function import(JsonRequest $request, ApiResponse $apiResponse, EntityManagerInterface $entityManager)
+  {
+    foreach ($request->get('incomes') as $inputExpense) {
+      $income = new Income();
+      $this->createAndHandleForm($income, $inputExpense, $entityManager);
+      $entityManager->persist($income);
+    }
+
+    $entityManager->flush();
+
+    return $apiResponse->setMessage('Incomes are imported')->send();
   }
 
   /**
@@ -73,13 +84,7 @@ class IncomeController extends Controller
       return $apiResponse->setMessage('Income not found')->setCode(ApiResponse::HTTP_NOT_FOUND)->send();
     }
 
-    $tagsIdMap = $this->getTagIdMap($request->get('tags'), $entityManager);
-    $request->set('tags', $tagsIdMap);
-    $request->set('user', $this->getUser()->getId());
-
-    $form = $this->createForm(IncomeType::class, $income);
-    $form->submit($request->all());
-
+    $form = $this->createAndHandleForm($income, $request->all(), $entityManager);
     if (!$form->isValid()) {
       return $apiResponse->setValidationErrors($form)->send();
     }
@@ -117,5 +122,17 @@ class IncomeController extends Controller
     }
 
     return $tagIdMap;
+  }
+
+  private function createAndHandleForm(Income $income, $input, EntityManagerInterface $entityManager)
+  {
+    $tagsIdMap = $this->getTagIdMap($input['tags'], $entityManager);
+    $input['tags'] = $tagsIdMap;
+    $input['user'] = $this->getUser()->getId();
+
+    $form = $this->createForm(IncomeType::class, $income);
+    $form->submit($input);
+
+    return $form;
   }
 }

@@ -28,8 +28,12 @@ class ExpenseController extends Controller
   /**
    * @Route("/expense/{id}", name="user_expense", methods={"GET"})
    */
-  public function details($id, ApiResponse $apiResponse, ExpenseRepository $expenseRepository, ResultFetcher $resultFetcher)
-  {
+  public function details(
+    $id,
+    ApiResponse $apiResponse,
+    ExpenseRepository $expenseRepository,
+    ResultFetcher $resultFetcher
+  ) {
     $expense = $expenseRepository->find($id);
 
     if ($expense && $this->getUser()->isEqualTo($expense->getUser())) {
@@ -44,14 +48,8 @@ class ExpenseController extends Controller
    */
   public function create(JsonRequest $request, ApiResponse $apiResponse, EntityManagerInterface $entityManager)
   {
-    $tagsIdMap = $this->getTagIdMap($request->get('tags'), $entityManager);
-    $request->set('tags', $tagsIdMap);
-    $request->set('user', $this->getUser()->getId());
-
     $expense = new Expense();
-    $form = $this->createForm(ExpenseType::class, $expense);
-    $form->submit($request->all());
-
+    $form = $this->createAndHandleForm($expense, $request->all(), $entityManager);
     if (!$form->isValid()) {
       return $apiResponse->setValidationErrors($form)->send();
     }
@@ -60,6 +58,22 @@ class ExpenseController extends Controller
     $entityManager->flush();
 
     return $apiResponse->setMessage('Expense created')->send();
+  }
+
+  /**
+   * @Route("/expense/import", name="import_expense", methods={"POST"})
+   */
+  public function import(JsonRequest $request, ApiResponse $apiResponse, EntityManagerInterface $entityManager)
+  {
+    foreach ($request->get('expenses') as $inputExpense) {
+      $expense = new Expense();
+      $this->createAndHandleForm($expense, $inputExpense, $entityManager);
+      $entityManager->persist($expense);
+    }
+
+    $entityManager->flush();
+
+    return $apiResponse->setMessage('Expenses are imported')->send();
   }
 
   /**
@@ -72,13 +86,7 @@ class ExpenseController extends Controller
       return $apiResponse->setMessage('Expense not found')->setCode(ApiResponse::HTTP_NOT_FOUND)->send();
     }
 
-    $tagsIdMap = $this->getTagIdMap($request->get('tags'), $entityManager);
-    $request->set('tags', $tagsIdMap);
-    $request->set('user', $this->getUser()->getId());
-
-    $form = $this->createForm(ExpenseType::class, $expense);
-    $form->submit($request->all());
-
+    $form = $this->createAndHandleForm($expense, $request->all(), $entityManager);
     if (!$form->isValid()) {
       return $apiResponse->setValidationErrors($form)->send();
     }
@@ -116,5 +124,17 @@ class ExpenseController extends Controller
     }
 
     return $tagIdMap;
+  }
+
+  private function createAndHandleForm(Expense $expense, $input, EntityManagerInterface $entityManager)
+  {
+    $tagsIdMap = $this->getTagIdMap($input['tags'], $entityManager);
+    $input['tags'] = $tagsIdMap;
+    $input['user'] = $this->getUser()->getId();
+
+    $form = $this->createForm(ExpenseType::class, $expense);
+    $form->submit($input);
+
+    return $form;
   }
 }
