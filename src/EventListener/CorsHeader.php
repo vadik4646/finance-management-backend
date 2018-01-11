@@ -12,9 +12,9 @@ class CorsHeader
    */
   public function onKernelRequest(GetResponseEvent $event)
   {
-    if ($event->getRequest()->isMethod("OPTIONS")) {
+    if ($_SERVER["REQUEST_METHOD"] == "OPTIONS") {
       $response = new Response();
-      $response->headers->set('Access-Control-Allow-Headers', 'origin, content-type, accept');
+      $response->headers->set('Access-Control-Allow-Headers', 'origin, content-type, accept, X-AUTH-TOKEN');
       $response->headers->set('Access-Control-Allow-Origin', '*');
       $response->headers->set('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, PATCH, OPTIONS');
 
