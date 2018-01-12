@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Annotation\Fetcher;
 use App\Utils\EntityField\CreatedAt;
 use App\Utils\EntityField\UpdatedAt;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,6 +23,7 @@ class Currency
    * @ORM\Column(type="string", length=3)
    * @Assert\NotBlank()
    * @Assert\Currency()
+   * @Fetcher()
    */
   private $code;
 
@@ -29,6 +31,7 @@ class Currency
    * @var string
    * @ORM\Column(type="string", length=100)
    * @Assert\NotBlank()
+   * @Fetcher()
    */
   private $name;
 
