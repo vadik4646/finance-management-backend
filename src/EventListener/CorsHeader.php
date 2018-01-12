@@ -25,7 +25,7 @@ class CorsHeader
    */
   public function onKernelResponse(FilterResponseEvent $event)
   {
-    if (!$event->isMasterRequest() || $event->getRequest()->getRealMethod() !== "OPTIONS") {
+    if (!$event->isMasterRequest()) {
       return;
     }
 
@@ -33,6 +33,9 @@ class CorsHeader
     $response->headers->set('Access-Control-Allow-Headers', 'origin, content-type, accept, x-auth-token');
     $response->headers->set('Access-Control-Allow-Origin', '*');
     $response->headers->set('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, PATCH, OPTIONS');
-    $event->stopPropagation();
+
+    if ($event->getRequest()->getRealMethod() === "OPTIONS") {
+      $event->stopPropagation();
+    }
   }
 }
