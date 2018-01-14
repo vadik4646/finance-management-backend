@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 class Session implements SessionInterface
 {
   private $storage;
-  private $isClosed = false;
 
   public function __construct(SessionStorage $session_storage)
   {
@@ -224,7 +223,7 @@ class Session implements SessionInterface
    */
   public function isStarted()
   {
-    return !$this->isClosed && $this->storage->isStarted();
+    return $this->storage->isStarted();
   }
 
   /**
@@ -289,10 +288,5 @@ class Session implements SessionInterface
   public function authenticate(User $user)
   {
     $this->storage->getMetadataBag()->user = $user;
-  }
-
-  public function close()
-  {
-    $this->isClosed = true;
   }
 }

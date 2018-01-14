@@ -23,6 +23,6 @@ class UserRepository extends ServiceEntityRepository
       ->where('u.email = :email')
       ->setParameter('email', $email)
       ->getQuery()
-      ->getSingleResult();
+      ->getOneOrNullResult();
   }
 }

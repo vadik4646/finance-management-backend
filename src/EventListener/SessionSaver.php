@@ -21,10 +21,11 @@ class SessionSaver
   public function onKernelResponse(FilterResponseEvent $event)
   {
     $response = $event->getResponse();
+
+    $this->session->start();
     $sessionId = $this->session->getId();
 
     $this->session->save();
-    $this->session->close();
 
     $response->headers->setCookie(new Cookie(TokenProvider::TOKEN_KEY, $sessionId));
     $response->headers->set(TokenProvider::TOKEN_KEY, $sessionId);

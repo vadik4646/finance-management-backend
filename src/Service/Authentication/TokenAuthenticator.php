@@ -2,6 +2,7 @@
 
 namespace App\Service\Authentication;
 
+use App\Service\ApiResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,6 +15,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 class TokenAuthenticator extends AbstractGuardAuthenticator
 {
   private $tokenProvider;
+  private $publicRoutes = ['register', 'login'];
 
   public function __construct(TokenProvider $tokenProvider)
   {
@@ -27,7 +29,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
    */
   public function supports(Request $request)
   {
-    return true;
+    return !in_array($request->attributes->get('_route'), $this->publicRoutes);
   }
 
   /**
@@ -68,7 +70,12 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
   public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
   {
-    return null;
+    $response = new ApiResponse();
+
+    return $response
+      ->setCode(ApiResponse::HTTP_UNAUTHORIZED)
+      ->setMessage("You should be logged in to perform this action")
+      ->send();
   }
 
   /**

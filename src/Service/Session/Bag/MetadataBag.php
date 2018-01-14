@@ -72,4 +72,19 @@ class MetadataBag implements SessionBagInterface
 
     return (array)$bagSnapshot;
   }
+
+  public function getCreated()
+  {
+    return $this->createdAt->getTimestamp();
+  }
+
+  public function getLastUsed()
+  {
+    return $this->lastActionAt->getTimestamp();
+  }
+
+  public function getLifetime()
+  {
+    return $this->lastActionAt->getTimestamp();
+  }
 }

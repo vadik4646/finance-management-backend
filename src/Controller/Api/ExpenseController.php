@@ -40,7 +40,7 @@ class ExpenseController extends Controller
       return $apiResponse->appendData($resultFetcher->toArray($expense))->send();
     }
 
-    return $apiResponse->setMessage('Expense not found')->setCode(ApiResponse::HTTP_NOT_FOUND)->send();
+    return $apiResponse->setMessage('Expense is not found')->setCode(ApiResponse::HTTP_NOT_FOUND)->send();
   }
 
   /**
@@ -57,7 +57,7 @@ class ExpenseController extends Controller
     $entityManager->persist($expense);
     $entityManager->flush();
 
-    return $apiResponse->setMessage('Expense created')->send();
+    return $apiResponse->setMessage('Expense has been created')->send();
   }
 
   /**
@@ -73,7 +73,7 @@ class ExpenseController extends Controller
 
     $entityManager->flush();
 
-    return $apiResponse->setMessage('Expenses are imported')->send();
+    return $apiResponse->setMessage('Expenses have been imported')->send();
   }
 
   /**
@@ -94,7 +94,7 @@ class ExpenseController extends Controller
     $entityManager->persist($expense);
     $entityManager->flush();
 
-    return $apiResponse->setMessage('Expense updated')->send();
+    return $apiResponse->setMessage('Expense has been updated')->send();
   }
 
   /**
@@ -105,18 +105,21 @@ class ExpenseController extends Controller
     $expense = $entityManager->getRepository(Expense::class)->find($request->get('id'));
 
     if (!$expense || !$this->getUser()->isEqualTo($expense->getUser())) {
-      return $apiResponse->setMessage('Expense not found')->setCode(ApiResponse::HTTP_NOT_FOUND)->send();
+      return $apiResponse->setMessage('Expense is not found')->setCode(ApiResponse::HTTP_NOT_FOUND)->send();
     }
 
     $entityManager->remove($expense);
     $entityManager->flush();
 
-    return $apiResponse->setMessage('Expense deleted')->send();
+    return $apiResponse->setMessage('Expense has been deleted')->send();
   }
 
   private function getTagIdMap($rawTags, EntityManagerInterface $entityManager)
   {
-    $tags = $entityManager->getRepository(Tag::class)->createOrGetExisting($rawTags, $this->getUser());
+    if (empty($rawTags)) {
+      return [];
+    }
+    $tags = $entityManager->getRepository(Tag::class)->createOrGetExisting((array)$rawTags, $this->getUser());
 
     $tagIdMap = [];
     foreach ($tags as $tag) {

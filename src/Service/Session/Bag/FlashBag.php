@@ -56,6 +56,11 @@ class FlashBag implements SessionBagInterface
     return (array)$bagSnapshot;
   }
 
+  public function peekAll()
+  {
+    return (array)$this;
+  }
+
   /**
    * @return string
    */

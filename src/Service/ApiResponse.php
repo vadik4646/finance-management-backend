@@ -7,9 +7,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ApiResponse
 {
-  const HTTP_OK          = 200;
-  const HTTP_NOT_FOUND   = 404;
-  const HTTP_BAD_REQUEST = 400;
+  const HTTP_OK           = 200;
+  const HTTP_NOT_FOUND    = 404;
+  const HTTP_BAD_REQUEST  = 400;
+  const HTTP_UNAUTHORIZED = 401;
 
   private $code = self::HTTP_OK;
   private $message = '';
@@ -55,7 +56,6 @@ class ApiResponse
   public function send()
   {
     $response = [];
-
     if ($this->message) {
       $response['message'] = $this->message;
     }
@@ -78,6 +78,7 @@ class ApiResponse
    */
   public function setValidationErrors(FormInterface $form)
   {
+    $this->code = self::HTTP_BAD_REQUEST;
     $this->validationErrors = $this->getErrorMessages($form);
 
     return $this;

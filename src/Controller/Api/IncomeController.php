@@ -36,7 +36,7 @@ class IncomeController extends Controller
       return $apiResponse->appendData($resultFetcher->toArray($income))->send();
     }
 
-    return $apiResponse->setMessage('Income not found')->setCode(ApiResponse::HTTP_NOT_FOUND)->send();
+    return $apiResponse->setMessage('Income is not found')->setCode(ApiResponse::HTTP_NOT_FOUND)->send();
   }
 
   /**
@@ -54,7 +54,7 @@ class IncomeController extends Controller
     $entityManager->persist($income);
     $entityManager->flush();
 
-    return $apiResponse->setMessage('Income created')->send();
+    return $apiResponse->setMessage('Income has been created')->send();
   }
 
   /**
@@ -70,7 +70,7 @@ class IncomeController extends Controller
 
     $entityManager->flush();
 
-    return $apiResponse->setMessage('Incomes are imported')->send();
+    return $apiResponse->setMessage('Incomes have been imported')->send();
   }
 
   /**
@@ -81,7 +81,7 @@ class IncomeController extends Controller
     $income = $entityManager->getRepository(Income::class)->find($id);
 
     if (!$income || !$this->getUser()->isEqualTo($income->getUser())) {
-      return $apiResponse->setMessage('Income not found')->setCode(ApiResponse::HTTP_NOT_FOUND)->send();
+      return $apiResponse->setMessage('Income is not found')->setCode(ApiResponse::HTTP_NOT_FOUND)->send();
     }
 
     $form = $this->createAndHandleForm($income, $request->all(), $entityManager);
@@ -92,7 +92,7 @@ class IncomeController extends Controller
     $entityManager->persist($income);
     $entityManager->flush();
 
-    return $apiResponse->setMessage('Income updated')->send();
+    return $apiResponse->setMessage('Income has been updated')->send();
   }
 
   /**
@@ -103,18 +103,21 @@ class IncomeController extends Controller
     $income = $entityManager->getRepository(Income::class)->find($request->get('id'));
 
     if (!$income || !$this->getUser()->isEqualTo($income->getUser())) {
-      return $apiResponse->setMessage('Income not found')->setCode(ApiResponse::HTTP_NOT_FOUND)->send();
+      return $apiResponse->setMessage('Income is not found')->setCode(ApiResponse::HTTP_NOT_FOUND)->send();
     }
 
     $entityManager->remove($income);
     $entityManager->flush();
 
-    return $apiResponse->setMessage('Income deleted')->send();
+    return $apiResponse->setMessage('Income has been deleted')->send();
   }
 
   private function getTagIdMap($rawTags, EntityManagerInterface $entityManager)
   {
-    $tags = $entityManager->getRepository(Tag::class)->createOrGetExisting($rawTags, $this->getUser());
+    if (empty($rawTags)) {
+      return [];
+    }
+    $tags = $entityManager->getRepository(Tag::class)->createOrGetExisting((array)$rawTags, $this->getUser());
 
     $tagIdMap = [];
     foreach ($tags as $tag) {

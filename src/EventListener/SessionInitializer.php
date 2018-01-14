@@ -29,10 +29,9 @@ class SessionInitializer
   private function handleSession(Request $request)
   {
     $this->session->start();
-    $metadataBag = $this->session->getMetadataBag();
 
     $now = new DateTime();
-    $secondsDifference = $now->getTimestamp() - $metadataBag->createdAt->getTimestamp();
+    $secondsDifference = $now->getTimestamp() - $this->session->getMetadataBag()->createdAt->getTimestamp();
     if ($secondsDifference > 60 * 60 * 4) {
       $this->session->migrate();
     }
