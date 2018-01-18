@@ -15,7 +15,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 class TokenAuthenticator extends AbstractGuardAuthenticator
 {
   private $tokenProvider;
-  private $publicRoutes = ['register', 'login'];
+  private $publicRoutes = ['register', 'login', 'tags', 'categories'];
 
   public function __construct(TokenProvider $tokenProvider)
   {

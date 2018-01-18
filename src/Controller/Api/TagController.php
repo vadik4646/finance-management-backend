@@ -16,7 +16,7 @@ class TagController extends Controller
    */
   public function tags(JsonRequest $request, ApiResponse $apiResponse, TagRepository $tagRepository, ResultFetcher $resultFetcher)
   {
-    $tags = $tagRepository->get( $request->get('search'), $this->getUser());
+    $tags = $tagRepository->get($request->get('search'), $this->getUser());
 
     return $apiResponse->appendData($resultFetcher->toArray($tags))->send();
   }
