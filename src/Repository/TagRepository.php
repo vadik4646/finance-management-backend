@@ -61,11 +61,11 @@ class TagRepository extends ServiceEntityRepository
   }
 
   /**
-   * @param User   $user
    * @param string $search
-   * @return mixed
+   * @param User   $user
+   * @return Tag[]
    */
-  public function getUsersAndPublic(User $user, $search) // todo elasticsearch or shpinx
+  public function get($search, User $user = null) // todo elasticsearch or shpinx
   {
     return $this->createQueryBuilder('t')
       ->andWhere('t.user IS NULL OR t.user = :user')

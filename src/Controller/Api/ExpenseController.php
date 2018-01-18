@@ -122,11 +122,11 @@ class ExpenseController extends Controller
   public function parse($bankName, JsonRequest $request, ApiResponse $apiResponse)
   {
     $uploadedFile = $request->files->get('file');
-    if (!BankFactory::exists($bankName)) {
+    $parser = Parser::parse($uploadedFile->getPathname(), $bankName);
+
+    if (!$parser) {
       return $apiResponse->setMessage('Unknown bank')->setCode(ApiResponse::HTTP_BAD_REQUEST)->send();
     }
-
-    $parser = Parser::parse($uploadedFile->getPathname(), $bankName);
 
     return $apiResponse->appendData($parser->export())->send();
   }
