@@ -3,6 +3,7 @@
 namespace App\Service\BankReport\Bank;
 
 use App\Service\BankReport\ParsedResultItem;
+use DateTime;
 
 class XlsMaibFinder
 {
@@ -54,7 +55,7 @@ class XlsMaibFinder
         continue;
       }
 
-      $resultDate = \DateTime::createFromFormat(
+      $resultDate = DateTime::createFromFormat(
         'd/m/Y H:i:s',
         $row[$columnIndexes['Data']] . ' ' . $row[$columnIndexes['Ora']]
       );

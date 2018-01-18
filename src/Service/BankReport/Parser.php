@@ -9,14 +9,13 @@ class Parser
    * @param string $bank
    * @return ParsedResult|null
    */
-  public function parse($fileName, $bank)
+  public static function parse($fileName, $bank)
   {
-    $bankFactory = new BankFactory();
-    if (!$bankFactory->exists($bank)) {
+    if (!BankFactory::exists($bank)) {
       return null;
     }
 
-    $parser = $bankFactory->get($bank);
+    $parser = BankFactory::get($bank);
     return $parser->parse($fileName);
   }
 }

@@ -7,6 +7,8 @@ use App\Entity\Tag;
 use App\Form\ExpenseType;
 use App\Repository\ExpenseRepository;
 use App\Service\ApiResponse;
+use App\Service\BankReport\BankFactory;
+use App\Service\BankReport\Parser;
 use App\Service\JsonRequest;
 use App\Service\ResultFetcher;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,7 +20,7 @@ class ExpenseController extends Controller
   /**
    * @Route("/expense", name="user_expenses", methods={"GET"})
    */
-  public function list(ApiResponse $apiResponse, ExpenseRepository $expenseRepository, ResultFetcher $resultFetcher)
+  public function expenses(ApiResponse $apiResponse, ExpenseRepository $expenseRepository, ResultFetcher $resultFetcher)
   {
     $expenses = $expenseRepository->findByUser($this->getUser());
 
@@ -112,6 +114,21 @@ class ExpenseController extends Controller
     $entityManager->flush();
 
     return $apiResponse->setMessage('Expense has been deleted')->send();
+  }
+
+  /**
+   * @Route("/expense/parse/{bankName}", name="parse_expenses", methods={"POST"})
+   */
+  public function parse($bankName, JsonRequest $request, ApiResponse $apiResponse)
+  {
+    $uploadedFile = $request->files->get('file');
+    if (!BankFactory::exists($bankName)) {
+      return $apiResponse->setMessage('Unknown bank')->setCode(ApiResponse::HTTP_BAD_REQUEST)->send();
+    }
+
+    $parser = Parser::parse($uploadedFile->getPathname(), $bankName);
+
+    return $apiResponse->appendData($parser->export())->send();
   }
 
   private function getTagIdMap($rawTags, EntityManagerInterface $entityManager)

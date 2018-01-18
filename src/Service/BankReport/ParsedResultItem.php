@@ -138,13 +138,15 @@ class ParsedResultItem
 
   public function export()
   {
+
     return [
       'dateTime' => $this->dateTime ? $this->dateTime->format('Y-m-d H:i:s') : null,
       'description' => $this->description,
       'currencyAmount' => $this->currencyAmount,
       'currencyCode' => $this->currencyCode,
       'amount' => $this->amount,
-      'type' => $this->type
+      'type' => $this->type,
+//      'possibleCategories' =>
     ];
   }
 }

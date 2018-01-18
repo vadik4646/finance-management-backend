@@ -18,7 +18,7 @@ class IncomeController extends Controller
   /**
    * @Route("/income", name="user_incomes", methods={"GET"})
    */
-  public function list(ApiResponse $apiResponse, IncomeRepository $incomeRepository, ResultFetcher $resultFetcher)
+  public function incomes(ApiResponse $apiResponse, IncomeRepository $incomeRepository, ResultFetcher $resultFetcher)
   {
     $incomes = $incomeRepository->findByUser($this->getUser());
 

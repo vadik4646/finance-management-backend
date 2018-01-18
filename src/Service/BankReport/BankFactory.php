@@ -23,7 +23,7 @@ class BankFactory
    * @param string $bank
    * @return BankParserInterface|null
    */
-  public function get($bank)
+  public static function get($bank)
   {
     return array_key_exists($bank, self::$bankMap) ? new self::$bankMap[$bank]() : null;
   }
@@ -31,17 +31,17 @@ class BankFactory
   /**
    * @return array
    */
-  public function map()
+  public static function map()
   {
     return [self::VICTORIA_BANK, self::MOLDOVA_AGROIND_BANK, self::MOLDINCON_BANK];
   }
 
   /**
    * @param string $bank
-   * @return array
+   * @return bool
    */
-  public function exists($bank)
+  public static function exists($bank)
   {
-    return array_key_exists($bank, self::$bankMap);
+    return isset(self::$bankMap[$bank]);
   }
 }

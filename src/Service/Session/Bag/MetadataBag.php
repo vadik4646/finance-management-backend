@@ -64,7 +64,7 @@ class MetadataBag implements SessionBagInterface
   {
     $bagSnapshot = clone $this;
 
-    $this->userId = null;
+    $this->user = null;
     $this->ip = null;
     $this->countryCode = null;
     $this->createdAt = null;

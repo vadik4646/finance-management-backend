@@ -4,6 +4,7 @@ namespace App\Service\BankReport\Bank;
 
 use App\Service\BankReport\ParsedResult;
 use App\Service\BankReport\ParsedResultItem;
+use PHPExcel_IOFactory;
 
 class MaibParser implements BankParserInterface
 {
@@ -13,7 +14,7 @@ class MaibParser implements BankParserInterface
    */
   public function parse($fileName)
   {
-    $excelReader = \PHPExcel_IOFactory::createReaderForFile($fileName)->load($fileName);
+    $excelReader = PHPExcel_IOFactory::createReaderForFile($fileName)->load($fileName);
     $worksheetIterator = $excelReader->getWorksheetIterator();
     $parsedResult = new ParsedResult();
     foreach ($worksheetIterator as $worksheet) {

@@ -26,7 +26,7 @@ class ParsedResult
   /**
    * @return array
    */
-  public function exportAll()
+  public function export()
   {
     $exportedResults = [];
     foreach ($this->results as $result) {

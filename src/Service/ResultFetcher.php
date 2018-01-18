@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Annotation\Fetcher;
+use DateTime;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Util\ClassUtils;
@@ -63,7 +64,7 @@ class ResultFetcher
     $fields = [];
     foreach ($fetchedFields as $fetchedField) {
       $fieldValue = $entity->{$fetchedField->getter}();
-      if ($fieldValue instanceof \DateTime) {
+      if ($fieldValue instanceof DateTime) {
         $fields[$fetchedField->name] = $this->fetchDateTime($fieldValue);
       } else {
         $fields[$fetchedField->name] = $this->fetch($fieldValue);
@@ -77,7 +78,7 @@ class ResultFetcher
    * @param \DateTime $dateTime
    * @return string
    */
-  private function fetchDateTime(\DateTime $dateTime)
+  private function fetchDateTime(DateTime $dateTime)
   {
     return $dateTime->format("Y-m-d H:i:s");
   }
