@@ -19,7 +19,7 @@ class CategoryRepository extends ServiceEntityRepository
    * @param User   $user
    * @return Category[]
    */
-  public function get($search, User $user = null) // todo elasticsearch or shpinx
+  public function get($search, User $user = null)
   {
     return $this->createQueryBuilder('c')
       ->andWhere('c.user IS NULL OR c.user = :user')

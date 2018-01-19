@@ -60,7 +60,7 @@ class VictoriaBankParser implements BankParserInterface
       $currencyCodes,
       $transactionDates,
       $fees,
-      $amounts // todo use that
+      $amounts
       ) = $result;
 
     $parsedResult = new ParsedResult();

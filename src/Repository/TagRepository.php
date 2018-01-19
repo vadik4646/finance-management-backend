@@ -65,7 +65,7 @@ class TagRepository extends ServiceEntityRepository
    * @param User   $user
    * @return Tag[]
    */
-  public function get($search, User $user = null) // todo elasticsearch or shpinx
+  public function get($search, User $user = null)
   {
     return $this->createQueryBuilder('t')
       ->andWhere('t.user IS NULL OR t.user = :user')
