@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Service\BankReport\ExchangeRate;
+namespace App\Service\BankReport;
 
 use DateTime;
 
-class Parser
+class ExchangeRateParser
 {
   private $urlTemplate = 'https://bnm.md/en/official_exchange_rates?get_xml=1&date=%s';
 
@@ -29,8 +29,7 @@ class Parser
     while ($result === null && ++$nrTries < 4) {
       try {
         $rateUrl = sprintf($this->urlTemplate, $date->format('d.m.Y'));
-        $ratesXml = file_get_contents($rateUrl);
-        $result = $this->parseXmlRate($ratesXml);
+        $result = $this->parseXmlRate(file_get_contents($rateUrl));
       } catch (\Exception $exception) {}
     }
 
@@ -47,7 +46,7 @@ class Parser
       return null;
     }
 
-    $currencies = [];
+    $currencies = ['MDL' => 1];
     $rates = simplexml_load_string($ratesXml);
     foreach ($rates->children() as $currency) {
       $currencies[(string)$currency->CharCode] = floatval($currency->Value);

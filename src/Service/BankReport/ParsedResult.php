@@ -37,13 +37,13 @@ class ParsedResult
   }
 
   /**
-   * @return array
+   * @return ParsedResultItem[][]
    */
   public function getGroupedResults()
   {
     $groupedByCurrency = [];
     foreach ($this->results as $result) {
-      if (!array_key_exists($result->getCurrencyCode(), $groupedByCurrency)) {
+      if (!isset($groupedByCurrency[$result->getCurrencyCode()])) {
         $groupedByCurrency[$result->getCurrencyCode()] = [];
       }
 

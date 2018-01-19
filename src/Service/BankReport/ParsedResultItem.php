@@ -74,7 +74,7 @@ class ParsedResultItem
    */
   public function setCurrencyAmount($currencyAmount)
   {
-    $this->currencyAmount = floatval(preg_replace('/\s/u', '', $currencyAmount));
+    $this->currencyAmount = abs(floatval(preg_replace('/\s/u', '', $currencyAmount)));
 
     return $this;
   }
@@ -112,7 +112,7 @@ class ParsedResultItem
    */
   public function setAmount($amount)
   {
-    $this->amount = floatval(preg_replace('/\s/u', '', $amount));
+    $this->amount = abs(floatval(preg_replace('/\s/u', '', $amount)));
 
     return $this;
   }
@@ -138,7 +138,6 @@ class ParsedResultItem
 
   public function export()
   {
-
     return [
       'dateTime' => $this->dateTime ? $this->dateTime->format('Y-m-d H:i:s') : null,
       'description' => $this->description,
