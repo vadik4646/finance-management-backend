@@ -7,7 +7,6 @@ use App\Entity\Tag;
 use App\Form\ExpenseType;
 use App\Repository\ExpenseRepository;
 use App\Service\ApiResponse;
-use App\Service\BankReport\BankFactory;
 use App\Service\BankReport\Parser;
 use App\Service\JsonRequest;
 use App\Service\ResultFetcher;
@@ -119,16 +118,14 @@ class ExpenseController extends Controller
   /**
    * @Route("/expense/parse/{bankName}", name="parse_expenses", methods={"POST"})
    */
-  public function parse($bankName, JsonRequest $request, ApiResponse $apiResponse)
+  public function parse($bankName, JsonRequest $request, ApiResponse $apiResponse, Parser $parser)
   {
     $uploadedFile = $request->files->get('file');
-    $parser = Parser::parse($uploadedFile->getPathname(), $bankName);
-
-    if (!$parser) {
-      return $apiResponse->setMessage('Unknown bank')->setCode(ApiResponse::HTTP_BAD_REQUEST)->send();
+    if ($uploadedFile && $result = $parser->parse($uploadedFile->getPathname(), $bankName)) {
+      return $apiResponse->appendData($result->export())->send();
     }
 
-    return $apiResponse->appendData($parser->export())->send();
+    return $apiResponse->setMessage('Unknown bank')->setCode(ApiResponse::HTTP_BAD_REQUEST)->send();
   }
 
   private function getTagIdMap($rawTags, EntityManagerInterface $entityManager)

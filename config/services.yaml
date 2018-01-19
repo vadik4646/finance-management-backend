@@ -3,87 +3,23 @@
 parameters:
     locale: 'en'
 
+imports:
+    - { resource: 'services/default.yaml' }
+    - { resource: 'services/security.yaml' }
+    - { resource: 'services/event_listener.yaml' }
+    - { resource: 'services/factory.yaml' }
+
 services:
-    # default configuration for services in *this* file
-    _defaults:
-        autowire: true      # Automatically injects dependencies in your services.
-        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-        public: false       # Allows optimizing the container by removing unused services; this also means
-                            # fetching services directly from the container via $container->get() won't work.
-                            # The best practice is to be explicit about your dependencies anyway.
+    app.service.exchange_rate_parser:
+        class: App\Service\BankReport\ExchangeRateParser
 
-    # makes classes in src/ available to be used as services
-    # this creates a service per class whose id is the fully-qualified class name
-    App\:
-        resource: '../src/*'
-        exclude: '../src/{Entity,Migrations,Tests}'
-
-    # controllers are imported separately to make sure services can be injected
-    # as action arguments even if you don't extend any base controller class
-    App\Controller\:
-        resource: '../src/Controller'
-        tags: ['controller.service_arguments']
-
-    app.security.token_authenticator:
-        class: App\Service\Authentication\TokenAuthenticator
-        arguments: ['@app.security.token_provider']
-
-    app.security.token_provider:
-        class: App\Service\Authentication\TokenProvider
-        arguments: ['@request_stack']
-
-    app.security.user_by_token_provider:
-        class: App\Service\Authentication\UserBySessionTokenProvider
-        arguments: ['@doctrine.orm.entity_manager']
-
-    app.security.session.metadata_bag:
-        class: App\Service\Session\Bag\MetadataBag
-
-    app.security.session.flash_bag:
-        class: App\Service\Session\Bag\FlashBag
-
-    app.security.session.attribute_bag:
-        class: App\Service\Session\Bag\AttributeBag
-
-    app.security.session_storage:
-        class: App\Service\Session\SessionStorage
-        autowire: false
+    app.service.exchange_rate_provider:
+        class: App\Service\BankReport\ExchangeRateProvider
         arguments:
-            - '@doctrine.orm.default_entity_manager'
-            - '@app.security.token_provider'
-            - '@request_stack'
-            - '@app.security.session.metadata_bag'
-            - '@app.security.session.attribute_bag'
-            - '@app.security.session.flash_bag'
+          - '@doctrine.orm.default_entity_manager'
+          - '@app.service.exchange_rate_parser'
 
-    app.security.authentication_manager:
-        class: App\Service\Authentication\AuthenticationManger
-        public: true
+    app.service.bank_report_parser:
+        class: App\Service\BankReport\Parser
         arguments:
-            - '@security.token_storage'
-            - '@app.security.session'
-            - '@event_dispatcher'
-
-    app.security.session:
-        class: App\Service\Session\Session
-        public: true
-        arguments:
-            - '@app.security.session_storage'
-
-    app.event_listener.session_initializer:
-        class: App\EventListener\SessionInitializer
-        arguments: ['@app.security.session']
-        tags:
-            - { name: kernel.event_listener, event: kernel.request }
-
-    app.event_listener.cors_header_sender:
-        class: App\EventListener\CorsHeader
-        tags:
-            - { name: kernel.event_listener, event: kernel.request, priority: 10000 }
-            - { name: kernel.event_listener, event: kernel.response, priority: 10000 }
-
-    app.event_listener.session_saver:
-        class: App\EventListener\SessionSaver
-        arguments: ['@app.security.session']
-        tags:
-            - { name: kernel.event_listener, event: kernel.response }
+          - '@doctrine.orm.default_entity_manager'

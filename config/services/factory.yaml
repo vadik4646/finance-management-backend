@@ -1,0 +1,5 @@
+services:
+    app.factory.currency_converter:
+        class: App\Service\CurrencyConverter\CurrencyConverterFactory
+        arguments:
+            - '@app.service.exchange_rate_provider'
