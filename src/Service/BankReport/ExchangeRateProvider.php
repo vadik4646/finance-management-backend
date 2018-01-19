@@ -41,6 +41,17 @@ class ExchangeRateProvider
 
   /**
    * @param DateTime $date
+   * @return Rate[]
+   */
+  public function getAndRegister(DateTime $date)
+  {
+    $parsedRates = $this->exchangeRateParser->get($date);
+
+    return $this->fillStorage($parsedRates, $date);
+  }
+
+  /**
+   * @param DateTime $date
    * @param string   $currencyCode
    * @return Rate|null
    */
@@ -68,6 +79,7 @@ class ExchangeRateProvider
         $this->entityManager->persist($rate);
       }
     }
+    $this->entityManager->flush();
 
     return $rates;
   }

@@ -4,13 +4,10 @@ namespace App\Service\BankReport;
 
 use App\Entity\Currency;
 use App\Entity\Customization;
-use App\Entity\User;
 use App\Service\CurrencyConverter\CurrencyConverterFactory;
 use App\Utils\Defaults;
-use App\Utils\Type\CustomizationKey;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
-use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class Parser
 {
@@ -32,7 +29,7 @@ class Parser
   public function __construct(
     EntityManagerInterface $entityManager,
     CurrencyConverterFactory $currencyConverterFactory,
-    TokenStorage $tokenStorage
+    TokenStorageInterface $tokenStorage
   ) {
     $this->entityManager = $entityManager;
     $this->currencyConverterFactory = $currencyConverterFactory;
