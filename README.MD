@@ -17,4 +17,4 @@
 6. guessers for different objects
 7. suggest the most commonly used for different objects
 8. elasticsearch or sphinx
-8. elasticsearch or sphinx
+9. add seeds
