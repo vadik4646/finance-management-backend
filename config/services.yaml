@@ -23,3 +23,5 @@ services:
         class: App\Service\BankReport\Parser
         arguments:
           - '@doctrine.orm.default_entity_manager'
+          - '@app.factory.currency_converter'
+          - '@security.token_storage'

@@ -3,8 +3,14 @@
 namespace App\Service\BankReport;
 
 use App\Entity\Currency;
+use App\Entity\Customization;
+use App\Entity\User;
 use App\Service\CurrencyConverter\CurrencyConverterFactory;
+use App\Utils\Defaults;
+use App\Utils\Type\CustomizationKey;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 
 class Parser
 {
@@ -23,11 +29,20 @@ class Parser
    */
   private $primaryCurrency;
 
-  public function __construct(EntityManagerInterface $entityManager, CurrencyConverterFactory $currencyConverterFactory)
-  {
+  public function __construct(
+    EntityManagerInterface $entityManager,
+    CurrencyConverterFactory $currencyConverterFactory,
+    TokenStorage $tokenStorage
+  ) {
     $this->entityManager = $entityManager;
     $this->currencyConverterFactory = $currencyConverterFactory;
-    $this->primaryCurrency = $this->entityManager->getRepository(Currency::class)->find('MDL'); // todo move to customization
+    $preferredCurrencyCode = $this->entityManager->getRepository(Customization::class)->getCurrencyCode(
+      $tokenStorage->getToken()->getUser()
+    );
+
+    $this->primaryCurrency = $this->entityManager->getRepository(Currency::class)->find(
+      $preferredCurrencyCode ?: Defaults::CURRENCY_CODE
+    );
   }
 
   /**
@@ -44,7 +59,7 @@ class Parser
     $parser = BankFactory::get($bank);
     $parsedResult = $parser->parse($fileName);
     if ($parsedResult) {
-      return $this->fillCosts($parsedResult);
+      return $this->fillCosts($parsedResult); // todo move to fillers stack
     }
 
     return null;
@@ -105,7 +120,10 @@ class Parser
     }
 
     if (is_null($parsedResultItem->getCurrencyAmount())) {
-      $currencyConverter = $this->currencyConverterFactory->build($this->primaryCurrency, $parsedResultItem->getDateTime());
+      $currencyConverter = $this->currencyConverterFactory->build(
+        $this->primaryCurrency,
+        $parsedResultItem->getDateTime()
+      );
       $amount = $currencyConverter->to($currency, $parsedResultItem->getCurrencyAmount());
       $parsedResultItem->setCurrencyAmount($amount);
     }

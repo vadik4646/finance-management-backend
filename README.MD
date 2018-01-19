@@ -9,7 +9,7 @@
 7. `php -S 127.0.0.1:8000`
 
 ### Features TODO
-1. user customization
+1. ~~user customization~~
 2. cron for currency rates
 3. categories management
 4. icons for categories
