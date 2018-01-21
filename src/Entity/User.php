@@ -232,7 +232,7 @@ class User implements UserInterface, \Serializable, EquatableInterface
    * @param UserInterface $user
    * @return bool
    */
-  public function isEqualTo(UserInterface $user)
+  public function isEqualTo(UserInterface $user = null)
   {
     if (!$user instanceof User) {
       return false;

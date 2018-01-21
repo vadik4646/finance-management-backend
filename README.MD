@@ -11,7 +11,7 @@
 ### Features TODO
 1. ~~user customization~~
 2. ~~cron for currency rates~~
-3. categories management
+3. ~~categories management~~
 4. icons for categories
 5. moldinconbank parser
 6. guessers for different objects
