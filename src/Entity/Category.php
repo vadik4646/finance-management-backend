@@ -35,6 +35,12 @@ class Category
   private $name;
 
   /**
+   * @ORM\ManyToOne(targetEntity="App\Entity\Icon")
+   * @Fetcher()
+   */
+  private $icon;
+
+  /**
    * @var User|null
    *
    * @ORM\ManyToOne(targetEntity="App\Entity\User")
@@ -88,5 +94,21 @@ class Category
   public function setUser($user)
   {
     $this->user = $user;
+  }
+
+  /**
+   * @return Icon
+   */
+  public function getIcon()
+  {
+    return $this->icon;
+  }
+
+  /**
+   * @param Icon $icon
+   */
+  public function setIcon($icon)
+  {
+    $this->icon = $icon;
   }
 }

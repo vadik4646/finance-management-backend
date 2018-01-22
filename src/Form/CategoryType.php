@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Category;
+use App\Entity\Icon;
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -15,6 +16,7 @@ class CategoryType extends AbstractType
   {
     $builder
       ->add('name')
+      ->add('icon', EntityType::class, ['class' => Icon::class])
       ->add('user', EntityType::class, ['class' => User::class]);
   }
 
