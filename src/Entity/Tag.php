@@ -112,4 +112,8 @@ class Tag
     $this->expenses = $expenses;
   }
 
+  public function __toString()
+  {
+    return $this->value;
+  }
 }

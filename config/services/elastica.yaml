@@ -1,0 +1,52 @@
+fos_elastica:
+    clients:
+        default: { host: '%env(ELASTIC_URL)%', port: 9200 }
+    indexes:
+        expense_search:
+            client: default
+            types:
+                expense:
+                    properties:
+                        id: ~
+                        user:
+                            type: "nested"
+                            properties:
+                                email: { boost: 5 }
+                                id: ~
+                        value: ~
+                        currency: {boost: 1}
+                        category: {boost: 3, analyzer: standard}
+                        tags: {boost: 2, analyzer: english}
+                    persistence:
+                        driver: orm
+                        model: App\Entity\Expense
+                        provider: ~
+                        finder: ~
+                        listener: ~
+                        elastica_to_model_transformer:
+                            query_builder_method: createSearchQueryBuilder
+        income_search:
+            client: default
+            types:
+                income:
+                    properties:
+                        id: ~
+                        user:
+                            type: "nested"
+                            properties:
+                                email: { boost: 5 }
+                                id: ~
+                        value: ~
+                        currency: {boost: 1}
+                        category: {boost: 3, analyzer: standard}
+                        tags: {boost: 2, analyzer: english}
+                    persistence:
+                        driver: orm
+                        model: App\Entity\Income
+                        provider: ~
+                        finder: ~
+                        listener: ~
+                        elastica_to_model_transformer:
+                            query_builder_method: createSearchQueryBuilder
+
+

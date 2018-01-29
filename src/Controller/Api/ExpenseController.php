@@ -10,6 +10,7 @@ use App\Service\ApiResponse;
 use App\Service\BankReport\Parser;
 use App\Service\JsonRequest;
 use App\Service\ResultFetcher;
+use App\Utils\Searcher;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -19,9 +20,8 @@ class ExpenseController extends Controller
   /**
    * @Route("/expense", name="user_expenses", methods={"GET"})
    */
-  public function expenses(ApiResponse $apiResponse, ExpenseRepository $expenseRepository, ResultFetcher $resultFetcher)
-  {
-    $expenses = $expenseRepository->findByUser($this->getUser());
+  public function expenses(Searcher $searcher, JsonRequest $request, ApiResponse $apiResponse, ResultFetcher $resultFetcher) {
+    $expenses = $searcher->searchExpense($this->getUser(), $request->get('search'));
 
     return $apiResponse->appendData($resultFetcher->toArray($expenses))->send();
   }
@@ -29,12 +29,7 @@ class ExpenseController extends Controller
   /**
    * @Route("/expense/{id}", name="user_expense", methods={"GET"})
    */
-  public function details(
-    $id,
-    ApiResponse $apiResponse,
-    ExpenseRepository $expenseRepository,
-    ResultFetcher $resultFetcher
-  ) {
+  public function details($id, ApiResponse $apiResponse, ExpenseRepository $expenseRepository, ResultFetcher $resultFetcher) {
     $expense = $expenseRepository->find($id);
 
     if ($expense && $this->getUser()->isEqualTo($expense->getUser())) {
@@ -133,6 +128,7 @@ class ExpenseController extends Controller
     if (empty($rawTags)) {
       return [];
     }
+
     $tags = $entityManager->getRepository(Tag::class)->createOrGetExisting((array)$rawTags, $this->getUser());
 
     $tagIdMap = [];
@@ -145,7 +141,7 @@ class ExpenseController extends Controller
 
   private function createAndHandleForm(Expense $expense, $input, EntityManagerInterface $entityManager)
   {
-    $tagsIdMap = $this->getTagIdMap($input['tags'], $entityManager);
+    $tagsIdMap = $this->getTagIdMap(isset($input['tags']) ? $input['tags'] : [], $entityManager);
     $input['tags'] = $tagsIdMap;
     $input['user'] = $this->getUser()->getId();
 

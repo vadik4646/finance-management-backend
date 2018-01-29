@@ -111,4 +111,9 @@ class Category
   {
     $this->icon = $icon;
   }
+
+  public function __toString()
+  {
+    return $this->getName();
+  }
 }

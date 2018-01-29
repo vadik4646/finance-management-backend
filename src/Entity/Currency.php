@@ -80,4 +80,9 @@ class Currency
   {
     return $this->rates;
   }
+
+  public function __toString()
+  {
+    return $this->getCode() . ' ' . $this->getName();
+  }
 }

@@ -13,8 +13,9 @@
 2. ~~cron for currency rates~~
 3. ~~categories management~~
 4. ~~icons for categories~~
-5. guessers for different objects
-6. suggest the most commonly used for different objects
-7. elasticsearch or sphinx
-8. add seeds
-9. moldinconbank parser
+5. ~~elasticsearch or sphinx, move requests to finders~~
+6. add system log (notices, warining, error)
+7. guessers for different objects
+8. suggest the most commonly used for different objects
+9. add seeds
+10. moldinconbank parser

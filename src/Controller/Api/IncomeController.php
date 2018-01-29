@@ -9,6 +9,7 @@ use App\Repository\IncomeRepository;
 use App\Service\ApiResponse;
 use App\Service\JsonRequest;
 use App\Service\ResultFetcher;
+use App\Utils\Searcher;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -18,9 +19,9 @@ class IncomeController extends Controller
   /**
    * @Route("/income", name="user_incomes", methods={"GET"})
    */
-  public function incomes(ApiResponse $apiResponse, IncomeRepository $incomeRepository, ResultFetcher $resultFetcher)
+  public function incomes(Searcher $searcher, JsonRequest $request, ApiResponse $apiResponse, ResultFetcher $resultFetcher)
   {
-    $incomes = $incomeRepository->findByUser($this->getUser());
+    $incomes = $searcher->searchIncome($this->getUser(), $request->get('search'));
 
     return $apiResponse->appendData($resultFetcher->toArray($incomes))->send();
   }
@@ -117,6 +118,7 @@ class IncomeController extends Controller
     if (empty($rawTags)) {
       return [];
     }
+
     $tags = $entityManager->getRepository(Tag::class)->createOrGetExisting((array)$rawTags, $this->getUser());
 
     $tagIdMap = [];
@@ -129,7 +131,7 @@ class IncomeController extends Controller
 
   private function createAndHandleForm(Income $income, $input, EntityManagerInterface $entityManager)
   {
-    $tagsIdMap = $this->getTagIdMap($input['tags'], $entityManager);
+    $tagsIdMap = $this->getTagIdMap(isset($input['tags']) ? $input['tags'] : [], $entityManager);
     $input['tags'] = $tagsIdMap;
     $input['user'] = $this->getUser()->getId();
 

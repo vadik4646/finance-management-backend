@@ -8,6 +8,7 @@ imports:
     - { resource: 'services/security.yaml' }
     - { resource: 'services/event_listener.yaml' }
     - { resource: 'services/factory.yaml' }
+    - { resource: 'services/elastica.yaml' }
 
 services:
     app.service.exchange_rate_parser:
