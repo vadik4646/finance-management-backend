@@ -14,7 +14,7 @@
 3. ~~categories management~~
 4. ~~icons for categories~~
 5. ~~elasticsearch or sphinx, move requests to finders~~
-6. add system log (notices, warining, error)
+6. add system log (notices, warining, error) and front error logs
 7. guessers for different objects
 8. suggest the most commonly used for different objects
 9. add seeds
