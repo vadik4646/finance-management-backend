@@ -20,3 +20,4 @@ monolog:
             channel: '#logs'
             level: WARNING
             bot_name: '%env(ENV_NAME)%'
+            formatter: app.monolog.mention_formatter

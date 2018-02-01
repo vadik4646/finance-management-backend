@@ -25,22 +25,14 @@ class Logger
    */
   private $tokenStorage;
 
-  private $frontendSlackIds;
-
-  private $backendSlackIds;
-
   public function __construct(
     EntityManagerInterface $entityManager,
     \Monolog\Logger $monologLogger,
-    TokenStorage $tokenStorage,
-    $frontendSlackIds,
-    $backendSlackIds
+    TokenStorage $tokenStorage
   ) {
     $this->entityManager = $entityManager;
     $this->monologLogger = $monologLogger;
     $this->tokenStorage = $tokenStorage;
-    $this->frontendSlackIds = array_filter(explode(',', $frontendSlackIds));
-    $this->backendSlackIds = array_filter(explode(',', $backendSlackIds));
   }
 
   /**
@@ -54,7 +46,7 @@ class Logger
    */
   public function emergency($message, $source, array $params = [])
   {
-    $this->monologLogger->emergency($this->buildMessage($message, $source), $params);
+    $this->monologLogger->emergency($message, array_merge($params, ['source' => $source]));
     $this->create($message, $source, $params, MonologLogger::getLevelName(MonologLogger::EMERGENCY));
   }
 
@@ -72,7 +64,7 @@ class Logger
    */
   public function alert($message, $source, array $params = [])
   {
-    $this->monologLogger->alert($this->buildMessage($message, $source), $params);
+    $this->monologLogger->alert($message, array_merge($params, ['source' => $source]));
     $this->create($message, $source, $params, MonologLogger::getLevelName(MonologLogger::ALERT));
   }
 
@@ -89,7 +81,7 @@ class Logger
    */
   public function critical($message, $source, array $params = [])
   {
-    $this->monologLogger->critical($this->buildMessage($message, $source), $params);
+    $this->monologLogger->critical($message, array_merge($params, ['source' => $source]));
     $this->create($message, $source, $params, MonologLogger::getLevelName(MonologLogger::CRITICAL));
   }
 
@@ -105,7 +97,7 @@ class Logger
    */
   public function error($message, $source, array $params = [])
   {
-    $this->monologLogger->error($this->buildMessage($message, $source), $params);
+    $this->monologLogger->error($message, array_merge($params, ['source' => $source]));
     $this->create($message, $source, $params, MonologLogger::getLevelName(MonologLogger::ERROR));
   }
 
@@ -123,7 +115,7 @@ class Logger
    */
   public function warning($message, $source, array $params = [])
   {
-    $this->monologLogger->warning($this->buildMessage($message, $source), $params);
+    $this->monologLogger->warning($message, array_merge($params, ['source' => $source]));
     $this->create($message, $source, $params, MonologLogger::getLevelName(MonologLogger::WARNING));
   }
 
@@ -138,7 +130,7 @@ class Logger
    */
   public function notice($message, $source, array $params = [])
   {
-    $this->monologLogger->notice($this->buildMessage($message, $source), $params);
+    $this->monologLogger->notice($message, array_merge($params, ['source' => $source]));
     $this->create($message, $source, $params, MonologLogger::getLevelName(MonologLogger::NOTICE));
   }
 
@@ -175,28 +167,5 @@ class Logger
 
     $this->entityManager->persist($log);
     $this->entityManager->flush();
-  }
-
-  /**
-   * @param string $message
-   * @param string $source
-   * @return string
-   */
-  private function buildMessage($message, $source)
-  {
-    $mentions = [];
-    if ($source === LogType::FRONT_END) {
-      foreach ($this->frontendSlackIds as $frontendSlackId) {
-        $mentions[] = '<@' . $frontendSlackId . '>';
-      }
-    }
-
-    if ($source === LogType::BACK_END) {
-      foreach ($this->backendSlackIds as $backendSlackId) {
-        $mentions[] = '<@' . $backendSlackId . '>';
-      }
-    }
-
-    return 'Source: ' . $source . ' ' . implode(', ', $mentions) . ' ' . $message;
   }
 }

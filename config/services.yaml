@@ -19,15 +19,15 @@ services:
     app.service.exchange_rate_provider:
         class: App\Service\BankReport\ExchangeRateProvider
         arguments:
-          - '@doctrine.orm.default_entity_manager'
-          - '@app.service.exchange_rate_parser'
+            - '@doctrine.orm.default_entity_manager'
+            - '@app.service.exchange_rate_parser'
 
     app.service.bank_report_parser:
         class: App\Service\BankReport\Parser
         arguments:
-          - '@doctrine.orm.default_entity_manager'
-          - '@app.factory.currency_converter'
-          - '@security.token_storage'
+            - '@doctrine.orm.default_entity_manager'
+            - '@app.factory.currency_converter'
+            - '@security.token_storage'
 
     app.logger:
         class: App\Service\Log\Logger
@@ -38,3 +38,11 @@ services:
             - '@security.token_storage'
             - '%env(SLACK_FRONTEND_USER_IDS)%'
             - '%env(SLACK_BACKEND_USER_IDS)%'
+
+    app.monolog.mention_formatter:
+        class: App\Service\Log\MentionFormatter
+        arguments:
+            - '%env(SLACK_FRONTEND_USER_IDS)%'
+            - '%env(SLACK_BACKEND_USER_IDS)%'
+        tags:
+            - { name: monolog.processor, handler: slack_notification }
