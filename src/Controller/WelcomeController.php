@@ -11,9 +11,8 @@ class WelcomeController extends Controller
   /**
    * @Route("/", name="welcome")
    */
-  public function index(LoggerInterface $logger)
+  public function index()
   {
-    $logger->error("Vadim tralalal");
     return $this->render('base.html.twig');
   }
 }
