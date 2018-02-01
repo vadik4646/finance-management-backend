@@ -16,10 +16,12 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 {
   private $tokenProvider;
   private $publicRoutes = ['register', 'login', 'tags', 'categories', 'welcome', 'append_error'];
+  private $environment;
 
-  public function __construct(TokenProvider $tokenProvider)
+  public function __construct(TokenProvider $tokenProvider, $environment)
   {
     $this->tokenProvider = $tokenProvider;
+    $this->environment = $environment;
   }
 
   /**
@@ -51,7 +53,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
       return null;
     }
 
-    if ($token === 'dev') {
+    if ($this->environment === 'dev' && $token === 'dev') {
       return $userProvider->loadUserByUsername('dev@dev.com');
     }
 

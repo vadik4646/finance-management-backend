@@ -47,6 +47,7 @@ class Version20180201121107 extends AbstractMigration
         $this->addSql('ALTER TABLE tag ADD CONSTRAINT FK_389B783A76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
         $this->addSql(file_get_contents(dirname(__FILE__) . '/category.sql'));
         $this->addSql(file_get_contents(dirname(__FILE__) . '/currency.sql'));
+        $this->addSql("INSERT INTO icon (id, title, class) VALUES (1, 'Default', 'default')");
     }
 
     public function down(Schema $schema)

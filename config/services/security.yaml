@@ -1,7 +1,9 @@
 services:
     app.security.token_authenticator:
         class: App\Service\Authentication\TokenAuthenticator
-        arguments: ['@app.security.token_provider']
+        arguments:
+            - '@app.security.token_provider'
+            - '%kernel.environment%'
 
     app.security.token_provider:
         class: App\Service\Authentication\TokenProvider

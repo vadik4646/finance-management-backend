@@ -29,22 +29,27 @@ class SecurityController extends Controller
     }
 
     $this->get('app.security.authentication_manager')->authenticate($user);
+
     return $response->setMessage('You have been logged in successfully')->send();
   }
 
   /**
    * @Route("/register", name="register", methods={"POST"})
    */
-  public function registerAction(JsonRequest $request, UserPasswordEncoderInterface $passwordEncoder, ApiResponse $response) {
+  public function registerAction(
+    JsonRequest $request,
+    UserPasswordEncoderInterface $passwordEncoder,
+    ApiResponse $response
+  ) {
     $user = new User();
     $form = $this->createForm(UserType::class, $user);
-    $form->submit($request->all());
+    $form->submit(['email' => $request->get('email'), 'plainPassword' => $request->get('password')]);
 
     if (!$form->isValid()) {
       return $response->setValidationErrors($form)->send();
     }
 
-    $password = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
+    $password = $passwordEncoder->encodePassword($user, $request->get('password'));
     $user->setPassword($password);
 
     $entityManager = $this->getDoctrine()->getManager();
