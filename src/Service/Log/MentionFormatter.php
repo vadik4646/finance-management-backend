@@ -4,6 +4,7 @@ namespace App\Service\Log;
 
 use App\Utils\Type\LogType;
 use Monolog\Formatter\FormatterInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class MentionFormatter implements FormatterInterface
 {
@@ -27,10 +28,9 @@ class MentionFormatter implements FormatterInterface
    */
   public function format(array $record)
   {
-    $record['message'] = $this->buildMessage(
-      $record['message'],
-      isset($record['context']['source']) ? $record['context']['source'] : LogType::BACK_END
-    );
+    if (!$this->hasNotFoundException($record)) {
+      $record['message'] = $this->buildMessage($record['message'], $this->getSource($record));
+    }
 
     return $record;
   }
@@ -48,6 +48,24 @@ class MentionFormatter implements FormatterInterface
     }
 
     return $records;
+  }
+
+  /**
+   * @param array $record
+   * @return string
+   */
+  private function getSource($record)
+  {
+    return isset($record['context']['source']) ? $record['context']['source'] : LogType::BACK_END;
+  }
+
+  /**
+   * @param array $record
+   * @return bool
+   */
+  private function hasNotFoundException($record)
+  {
+    return isset($record['context']['exception']) && $record['context']['exception'] instanceof NotFoundHttpException;
   }
 
   /**

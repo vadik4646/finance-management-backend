@@ -18,6 +18,7 @@
 7. ~~add seeds~~
 8. ~~add slack notification by error source (frontend, backend)~~
 9. session handler (a public link on error details, session problem)
-10. guessers for different objects
-11. suggest the most commonly used for different objects
-12. moldinconbank parser
+10. add tests
+11. guessers for different objects
+12. suggest the most commonly used for different objects
+13. moldinconbank parser
