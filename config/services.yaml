@@ -45,4 +45,4 @@ services:
             - '%env(SLACK_FRONTEND_USER_IDS)%'
             - '%env(SLACK_BACKEND_USER_IDS)%'
         tags:
-            - { name: monolog.processor, handler: slack_notification }
+            - { name: monolog.processor, method: format, handler: slack_notification }
