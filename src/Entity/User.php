@@ -54,12 +54,6 @@ class User implements UserInterface, \Serializable, EquatableInterface
   private $status = self::STATUS_ACTIVE;
 
   /**
-   * @var string
-   * @Assert\NotBlank()
-   */
-  private $plainPassword;
-
-  /**
    * @var \App\Service\Session\Session[]
    *
    * @ORM\OneToMany(targetEntity="App\Entity\Session", mappedBy="user")
@@ -96,22 +90,6 @@ class User implements UserInterface, \Serializable, EquatableInterface
   public function setEmail($email)
   {
     $this->email = $email;
-  }
-
-  /**
-   * @return string
-   */
-  public function getPlainPassword()
-  {
-    return $this->plainPassword;
-  }
-
-  /**
-   * @param string $plainPassword
-   */
-  public function setPlainPassword($plainPassword)
-  {
-    $this->plainPassword = $plainPassword;
   }
 
   /**
