@@ -37,6 +37,7 @@ class Category
   /**
    * @ORM\ManyToOne(targetEntity="App\Entity\Icon")
    * @Fetcher()
+   * @Assert\NotBlank()
    */
   private $icon;
 

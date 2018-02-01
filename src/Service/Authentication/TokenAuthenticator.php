@@ -15,7 +15,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 class TokenAuthenticator extends AbstractGuardAuthenticator
 {
   private $tokenProvider;
-  private $publicRoutes = ['register', 'login', 'tags', 'categories'];
+  private $publicRoutes = ['register', 'login', 'tags', 'categories', 'welcome', 'append_error'];
 
   public function __construct(TokenProvider $tokenProvider)
   {
@@ -29,7 +29,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
    */
   public function supports(Request $request)
   {
-    return !in_array($request->attributes->get('_route'), $this->publicRoutes);
+    return true;
   }
 
   /**
@@ -70,6 +70,10 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
   public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
   {
+    if (in_array($request->attributes->get('_route'), $this->publicRoutes)) {
+      return null;
+    }
+
     $response = new ApiResponse();
 
     return $response

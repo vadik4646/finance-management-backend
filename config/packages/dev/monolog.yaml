@@ -1,0 +1,22 @@
+monolog:
+    handlers:
+#        main:
+#            type: stream
+#            path: "%kernel.logs_dir%/%kernel.environment%.log"
+#            level: WARNING
+#            channels: ["!event"]
+        # uncomment to get logging in your browser
+        # you may have to allow bigger header sizes in your Web server configuration
+        #firephp:
+        #    type: firephp
+        #    level: info
+        #chromephp:
+        #    type: chromephp
+        #    level: info
+
+        slack_notification:
+            type: slack
+            token: '%env(SLACK_TOKEN)%'
+            channel: '#logs'
+            level: WARNING
+            bot_name: 'Vadim Dev'
