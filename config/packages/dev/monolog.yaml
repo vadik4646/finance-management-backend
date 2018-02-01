@@ -19,4 +19,4 @@ monolog:
             token: '%env(SLACK_TOKEN)%'
             channel: '#logs'
             level: WARNING
-            bot_name: 'Vadim Dev'
+            bot_name: '%env(ENV_NAME)%'
