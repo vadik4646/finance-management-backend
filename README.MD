@@ -14,9 +14,9 @@
 3. ~~categories management~~
 4. ~~icons for categories~~
 5. ~~elasticsearch or sphinx, move requests to finders~~
-6. add system log (notices, warining, error) and front error logs
-7. guessers for different objects
-8. suggest the most commonly used for different objects
-9. add seeds
-10. add slack notification by tags and a public link on error details
+6. ~~add system log (notices, warining, error) and front error logs~~
+7. add seeds
+8. add slack notification by tags and a public link on error details
+9. guessers for different objects
+10. suggest the most commonly used for different objects
 11. moldinconbank parser
