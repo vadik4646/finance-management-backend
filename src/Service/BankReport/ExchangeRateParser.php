@@ -3,10 +3,21 @@
 namespace App\Service\BankReport;
 
 use DateTime;
+use Psr\Log\LoggerInterface;
 
 class ExchangeRateParser
 {
   private $urlTemplate = 'https://bnm.md/en/official_exchange_rates?get_xml=1&date=%s';
+
+  /**
+   * @var LoggerInterface
+   */
+  private $logger;
+
+  public function __construct(LoggerInterface $logger)
+  {
+    $this->logger = $logger;
+  }
 
   /**
    * @param DateTime $date
@@ -30,7 +41,9 @@ class ExchangeRateParser
       try {
         $rateUrl = sprintf($this->urlTemplate, $date->format('d.m.Y'));
         $result = $this->parseXmlRate(file_get_contents($rateUrl));
-      } catch (\Exception $exception) {}
+      } catch (\Exception $exception) {
+        $this->logger->error(sprintf("Can't parse BNM rate. Url %s, Exception: %s", $rateUrl, $exception->getMessage()));
+      }
     }
 
     return $result;

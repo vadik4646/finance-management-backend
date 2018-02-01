@@ -13,6 +13,8 @@ imports:
 services:
     app.service.exchange_rate_parser:
         class: App\Service\BankReport\ExchangeRateParser
+        arguments:
+            - '@logger'
 
     app.service.exchange_rate_provider:
         class: App\Service\BankReport\ExchangeRateProvider
@@ -26,3 +28,13 @@ services:
           - '@doctrine.orm.default_entity_manager'
           - '@app.factory.currency_converter'
           - '@security.token_storage'
+
+    app.logger:
+        class: App\Service\Log\Logger
+        public: true
+        arguments:
+            - '@doctrine.orm.default_entity_manager'
+            - '@logger'
+            - '@security.token_storage'
+            - '%env(SLACK_FRONTEND_USER_IDS)%'
+            - '%env(SLACK_BACKEND_USER_IDS)%'

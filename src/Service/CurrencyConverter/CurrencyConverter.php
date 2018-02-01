@@ -58,7 +58,7 @@ class CurrencyConverter
    */
   private function convert(Rate $rate, $value)
   {
-    if (!$this->primaryRate->getValue()) {
+    if (!$rate->getValue()) {
       return null;
     }
 
