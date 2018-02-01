@@ -43,7 +43,7 @@ class SecurityController extends Controller
   ) {
     $user = new User();
     $form = $this->createForm(UserType::class, $user);
-    $form->submit(['email' => $request->get('email'), 'plainPassword' => $request->get('password')]);
+    $form->submit($request->all());
 
     if (!$form->isValid()) {
       return $response->setValidationErrors($form)->send();
