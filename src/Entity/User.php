@@ -54,13 +54,6 @@ class User implements UserInterface, \Serializable, EquatableInterface
   private $status = self::STATUS_ACTIVE;
 
   /**
-   * @var \App\Service\Session\Session[]
-   *
-   * @ORM\OneToMany(targetEntity="App\Entity\Session", mappedBy="user")
-   */
-  private $sessions;
-
-  /**
    * @return int
    */
   public function getId()
@@ -114,9 +107,7 @@ class User implements UserInterface, \Serializable, EquatableInterface
    * Constructs the object
    *
    * @link  http://php.net/manual/en/serializable.unserialize.php
-   * @param string $serialized <p>
-   *                           The string representation of the object.
-   *                           </p>
+   * @param string $serialized
    * @return void
    * @since 5.1.0
    */
@@ -241,13 +232,5 @@ class User implements UserInterface, \Serializable, EquatableInterface
   public function setStatus($status)
   {
     $this->status = $status;
-  }
-
-  /**
-   * @return \App\Service\Session\Session[]
-   */
-  public function getSessions()
-  {
-    return $this->sessions;
   }
 }

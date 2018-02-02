@@ -21,7 +21,7 @@ class CategoryController extends Controller
   {
     $categories = $categoryRepository->get($request->get('search'), $this->getUser());
 
-    return $apiResponse->appendData($resultFetcher->toArray($categories))->send();
+    return $apiResponse->appendData($resultFetcher->toArray($categories))->get();
   }
 
   /**
@@ -35,13 +35,13 @@ class CategoryController extends Controller
     $form->submit($request->all());
 
     if (!$form->isValid()) {
-      return $apiResponse->setValidationErrors($form)->send();
+      return $apiResponse->setValidationErrors($form)->get();
     }
 
     $entityManager->persist($category);
     $entityManager->flush();
 
-    return $apiResponse->setMessage('Category has been created')->send();
+    return $apiResponse->setMessage('Category has been created')->get();
   }
 
   /**
@@ -52,7 +52,7 @@ class CategoryController extends Controller
     $category = $entityManager->getRepository(Category::class)->find($id);
 
     if (!$category || !$this->getUser()->isEqualTo($category->getUser())) {
-      return $apiResponse->setMessage('Category is not found')->setCode(ApiResponse::HTTP_NOT_FOUND)->send();
+      return $apiResponse->setMessage('Category is not found')->setCode(ApiResponse::HTTP_NOT_FOUND)->get();
     }
 
     $form = $this->createForm(CategoryType::class, $category);
@@ -60,13 +60,13 @@ class CategoryController extends Controller
     $form->submit($request->all());
 
     if (!$form->isValid()) {
-      return $apiResponse->setValidationErrors($form)->send();
+      return $apiResponse->setValidationErrors($form)->get();
     }
 
     $entityManager->persist($category);
     $entityManager->flush();
 
-    return $apiResponse->setMessage('Category has been updated')->send();
+    return $apiResponse->setMessage('Category has been updated')->get();
   }
 
   /**
@@ -77,12 +77,12 @@ class CategoryController extends Controller
     $category = $entityManager->getRepository(Category::class)->find($request->get('id'));
 
     if (!$category || !$this->getUser()->isEqualTo($category->getUser())) {
-      return $apiResponse->setMessage('Category is not found')->setCode(ApiResponse::HTTP_NOT_FOUND)->send();
+      return $apiResponse->setMessage('Category is not found')->setCode(ApiResponse::HTTP_NOT_FOUND)->get();
     }
 
     $entityManager->remove($category);
     $entityManager->flush();
 
-    return $apiResponse->setMessage('Category has been deleted')->send();
+    return $apiResponse->setMessage('Category has been deleted')->get();
   }
 }

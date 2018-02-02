@@ -2,6 +2,7 @@
 
 namespace App\Service\Authentication;
 
+use App\Entity\Token;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -9,7 +10,7 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-class UserBySessionTokenProvider implements UserProviderInterface
+class UserByTokenProvider implements UserProviderInterface
 {
   private $entityManager;
 
@@ -32,9 +33,8 @@ class UserBySessionTokenProvider implements UserProviderInterface
    */
   public function loadUserByUsername($token)
   {
-    $sessionRepository = $this->entityManager->getRepository(\App\Entity\Session::class);
-    $session = $sessionRepository->find($token);
-    if (!$session || !$user = $session->getUser()) {
+    $token = $this->entityManager->getRepository(Token::class)->find($token);
+    if (empty($token) || !$user = $token->getUser()) {
       throw new UsernameNotFoundException();
     }
 

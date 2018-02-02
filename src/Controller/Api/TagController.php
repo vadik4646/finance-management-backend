@@ -18,6 +18,6 @@ class TagController extends Controller
   {
     $tags = $tagRepository->get($request->get('search'), $this->getUser());
 
-    return $apiResponse->appendData($resultFetcher->toArray($tags))->send();
+    return $apiResponse->appendData($resultFetcher->toArray($tags))->get();
   }
 }

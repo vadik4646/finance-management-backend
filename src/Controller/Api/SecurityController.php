@@ -25,12 +25,12 @@ class SecurityController extends Controller
     $user = $userRepository->loadUserByEmail($request->get('email'));
 
     if (!$user || !$passwordEncoder->isPasswordValid($user, $request->get('password'))) {
-      return $response->setMessage('Invalid credentials')->setCode(ApiResponse::HTTP_BAD_REQUEST)->send();
+      return $response->setMessage('Invalid credentials')->setCode(ApiResponse::HTTP_BAD_REQUEST)->get();
     }
 
-    $this->get('app.security.authentication_manager')->authenticate($user);
+    $this->get('app.security.authentication_manager')->authenticate($user, $response);
 
-    return $response->setMessage('You have been logged in successfully')->send();
+    return $response->setMessage('You have been logged in successfully')->get();
   }
 
   /**
@@ -46,7 +46,7 @@ class SecurityController extends Controller
     $form->submit($request->all());
 
     if (!$form->isValid()) {
-      return $response->setValidationErrors($form)->send();
+      return $response->setValidationErrors($form)->get();
     }
 
     $password = $passwordEncoder->encodePassword($user, $request->get('password'));
@@ -55,8 +55,8 @@ class SecurityController extends Controller
     $entityManager = $this->getDoctrine()->getManager();
     $entityManager->persist($user);
     $entityManager->flush();
-    $this->get('app.security.authentication_manager')->authenticate($user);
+    $this->get('app.security.authentication_manager')->authenticate($user, $response);
 
-    return $response->setMessage('You have been registered successfully')->send();
+    return $response->setMessage('You have been registered successfully')->get();
   }
 }

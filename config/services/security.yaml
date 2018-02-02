@@ -3,46 +3,23 @@ services:
         class: App\Service\Authentication\TokenAuthenticator
         arguments:
             - '@app.security.token_provider'
+            - '@doctrine.orm.default_entity_manager'
             - '%kernel.environment%'
 
     app.security.token_provider:
         class: App\Service\Authentication\TokenProvider
-        arguments: ['@request_stack']
+        arguments:
+            - '@request_stack'
+            - '@doctrine.orm.default_entity_manager'
 
     app.security.user_by_token_provider:
-        class: App\Service\Authentication\UserBySessionTokenProvider
-        arguments: ['@doctrine.orm.entity_manager']
-
-    app.security.session.metadata_bag:
-        class: App\Service\Session\Bag\MetadataBag
-
-    app.security.session.flash_bag:
-        class: App\Service\Session\Bag\FlashBag
-
-    app.security.session.attribute_bag:
-        class: App\Service\Session\Bag\AttributeBag
-
-    app.security.session_storage:
-        class: App\Service\Session\SessionStorage
-        autowire: false
+        class: App\Service\Authentication\UserByTokenProvider
         arguments:
-            - '@doctrine.orm.default_entity_manager'
-            - '@app.security.token_provider'
-            - '@request_stack'
-            - '@app.security.session.metadata_bag'
-            - '@app.security.session.attribute_bag'
-            - '@app.security.session.flash_bag'
+            - '@doctrine.orm.entity_manager'
 
     app.security.authentication_manager:
-        class: App\Service\Authentication\AuthenticationManger
         public: true
+        class: App\Service\Authentication\AuthenticationManager
         arguments:
             - '@security.token_storage'
-            - '@app.security.session'
-            - '@event_dispatcher'
-
-    app.security.session:
-        class: App\Service\Session\Session
-        public: true
-        arguments:
-            - '@app.security.session_storage'
+            - '@app.security.token_provider'

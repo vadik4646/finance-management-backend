@@ -23,7 +23,7 @@ class ExpenseController extends Controller
   public function expenses(Searcher $searcher, JsonRequest $request, ApiResponse $apiResponse, ResultFetcher $resultFetcher) {
     $expenses = $searcher->searchExpense($this->getUser(), $request->get('search'));
 
-    return $apiResponse->appendData($resultFetcher->toArray($expenses))->send();
+    return $apiResponse->appendData($resultFetcher->toArray($expenses))->get();
   }
 
   /**
@@ -33,10 +33,10 @@ class ExpenseController extends Controller
     $expense = $expenseRepository->find($id);
 
     if ($expense && $this->getUser()->isEqualTo($expense->getUser())) {
-      return $apiResponse->appendData($resultFetcher->toArray($expense))->send();
+      return $apiResponse->appendData($resultFetcher->toArray($expense))->get();
     }
 
-    return $apiResponse->setMessage('Expense is not found')->setCode(ApiResponse::HTTP_NOT_FOUND)->send();
+    return $apiResponse->setMessage('Expense is not found')->setCode(ApiResponse::HTTP_NOT_FOUND)->get();
   }
 
   /**
@@ -47,13 +47,13 @@ class ExpenseController extends Controller
     $expense = new Expense();
     $form = $this->createAndHandleForm($expense, $request->all(), $entityManager);
     if (!$form->isValid()) {
-      return $apiResponse->setValidationErrors($form)->send();
+      return $apiResponse->setValidationErrors($form)->get();
     }
 
     $entityManager->persist($expense);
     $entityManager->flush();
 
-    return $apiResponse->setMessage('Expense has been created')->send();
+    return $apiResponse->setMessage('Expense has been created')->get();
   }
 
   /**
@@ -69,7 +69,7 @@ class ExpenseController extends Controller
 
     $entityManager->flush();
 
-    return $apiResponse->setMessage('Expenses have been imported')->send();
+    return $apiResponse->setMessage('Expenses have been imported')->get();
   }
 
   /**
@@ -79,18 +79,18 @@ class ExpenseController extends Controller
   {
     $expense = $entityManager->getRepository(Expense::class)->find($id);
     if (!$expense || !$this->getUser()->isEqualTo($expense->getUser())) {
-      return $apiResponse->setMessage('Expense not found')->setCode(ApiResponse::HTTP_NOT_FOUND)->send();
+      return $apiResponse->setMessage('Expense not found')->setCode(ApiResponse::HTTP_NOT_FOUND)->get();
     }
 
     $form = $this->createAndHandleForm($expense, $request->all(), $entityManager);
     if (!$form->isValid()) {
-      return $apiResponse->setValidationErrors($form)->send();
+      return $apiResponse->setValidationErrors($form)->get();
     }
 
     $entityManager->persist($expense);
     $entityManager->flush();
 
-    return $apiResponse->setMessage('Expense has been updated')->send();
+    return $apiResponse->setMessage('Expense has been updated')->get();
   }
 
   /**
@@ -101,13 +101,13 @@ class ExpenseController extends Controller
     $expense = $entityManager->getRepository(Expense::class)->find($request->get('id'));
 
     if (!$expense || !$this->getUser()->isEqualTo($expense->getUser())) {
-      return $apiResponse->setMessage('Expense is not found')->setCode(ApiResponse::HTTP_NOT_FOUND)->send();
+      return $apiResponse->setMessage('Expense is not found')->setCode(ApiResponse::HTTP_NOT_FOUND)->get();
     }
 
     $entityManager->remove($expense);
     $entityManager->flush();
 
-    return $apiResponse->setMessage('Expense has been deleted')->send();
+    return $apiResponse->setMessage('Expense has been deleted')->get();
   }
 
   /**
@@ -117,10 +117,10 @@ class ExpenseController extends Controller
   {
     $uploadedFile = $request->files->get('file');
     if ($uploadedFile && $result = $parser->parse($uploadedFile->getPathname(), $bankName)) {
-      return $apiResponse->appendData($result->export())->send();
+      return $apiResponse->appendData($result->export())->get();
     }
 
-    return $apiResponse->setMessage('Unknown bank')->setCode(ApiResponse::HTTP_BAD_REQUEST)->send();
+    return $apiResponse->setMessage('Unknown bank')->setCode(ApiResponse::HTTP_BAD_REQUEST)->get();
   }
 
   private function getTagIdMap($rawTags, EntityManagerInterface $entityManager)

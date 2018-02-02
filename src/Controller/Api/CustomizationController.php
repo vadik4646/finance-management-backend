@@ -24,7 +24,7 @@ class CustomizationController extends Controller
   ) {
     $customizations = $customizationRepository->findByUser($this->getUser());
 
-    return $apiResponse->appendData($resultFetcher->toArray($customizations))->send();
+    return $apiResponse->appendData($resultFetcher->toArray($customizations))->get();
   }
 
   /**
@@ -41,12 +41,12 @@ class CustomizationController extends Controller
     $form->submit($request->all());
 
     if (!$form->isValid()) {
-      return $apiResponse->setValidationErrors($form)->send();
+      return $apiResponse->setValidationErrors($form)->get();
     }
 
     $entityManager->persist($customization);
     $entityManager->flush();
 
-    return $apiResponse->setMessage('Customization has been configured')->send();
+    return $apiResponse->setMessage('Customization has been configured')->get();
   }
 }

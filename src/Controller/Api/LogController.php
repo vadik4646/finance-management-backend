@@ -19,7 +19,7 @@ class LogController extends Controller
   public function append(JsonRequest $request, ApiResponse $apiResponse)
   {
     if (!isset(Logger::getLevels()[$request->get('type')])) {
-      return $apiResponse->setMessage('Invalid type')->setCode(ApiResponse::HTTP_NOT_FOUND)->send();
+      return $apiResponse->setMessage('Invalid type')->setCode(ApiResponse::HTTP_NOT_FOUND)->get();
     }
 
     $this->get('app.logger')->log(
@@ -29,6 +29,6 @@ class LogController extends Controller
       $request->get('params', [])
     );
 
-    return $apiResponse->setMessage('Log has been appended')->send();
+    return $apiResponse->setMessage('Log has been appended')->get();
   }
 }
