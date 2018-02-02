@@ -4,3 +4,11 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.request, priority: 10000 }
             - { name: kernel.event_listener, event: kernel.response, priority: 10000 }
+
+    app.event_listener.profiler:
+        class: App\EventListener\DebugTokenLogger
+        arguments:
+            - '@app.logger'
+            - '%kernel.environment%'
+        tags:
+             - { name: kernel.event_listener, event: kernel.terminate }

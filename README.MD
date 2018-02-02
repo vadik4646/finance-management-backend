@@ -17,7 +17,7 @@
 6. ~~add system log (notices, warining, error) and front error logs~~
 7. ~~add seeds~~
 8. ~~add slack notification by error source (frontend, backend)~~
-9. session handler (a public link on error details, session problem)
+9. ~~session handler (a public link on error details, session problem)~~
 10. add tests
 11. guessers for different objects
 12. suggest the most commonly used for different objects

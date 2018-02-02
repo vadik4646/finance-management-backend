@@ -3,7 +3,6 @@
 namespace App\Service\Log;
 
 use App\Entity\Log;
-use App\Utils\Type\LogType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Monolog\Logger as MonologLogger;
@@ -148,6 +147,14 @@ class Logger
   {
     $this->create($message, $source, $params, $type);
     $this->{strtolower($type)}($message, $source, $params);
+  }
+
+  /**
+   * @param string $debugLink
+   */
+  public function addDebugLink($debugLink)
+  {
+    $this->monologLogger->notice('Debug link: <' . $debugLink . '|' . $debugLink . '>');
   }
 
   /**
