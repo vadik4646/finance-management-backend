@@ -49,11 +49,11 @@ class Parser
    */
   public function parse($fileName, $bank)
   {
-    if (!BankFactory::exists($bank)) {
+    if (!BankParserFactory::exists($bank)) {
       return null;
     }
 
-    $parser = BankFactory::get($bank);
+    $parser = BankParserFactory::get($bank);
     $parsedResult = $parser->parse($fileName);
     if ($parsedResult) {
       return $this->fillCosts($parsedResult); // todo move to fillers stack

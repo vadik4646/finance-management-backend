@@ -13,6 +13,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class ParseRatesCommand extends Command
 {
   protected static $defaultName = 'app:parse-rates';
+
   /**
    * @var ExchangeRateProvider
    */

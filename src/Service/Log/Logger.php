@@ -154,7 +154,7 @@ class Logger
    */
   public function addDebugLink($debugLink)
   {
-    $this->monologLogger->notice('Debug link: <' . $debugLink . '|' . $debugLink . '>');
+    $this->monologLogger->warning('Debug link: <' . $debugLink . '|' . $debugLink . '>');
   }
 
   /**

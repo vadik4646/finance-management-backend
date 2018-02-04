@@ -7,7 +7,7 @@ use App\Service\BankReport\Bank\MoldinconBankParser;
 use App\Service\BankReport\Bank\MaibParser;
 use App\Service\BankReport\Bank\VictoriaBankParser;
 
-class BankFactory
+class BankParserFactory
 {
   const VICTORIA_BANK        = 'victoria_bank';
   const MOLDOVA_AGROIND_BANK = 'moldova_agroind_bank';

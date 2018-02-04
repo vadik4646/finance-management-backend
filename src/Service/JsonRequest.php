@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use App\Service\Session\Session;
 use Symfony\Component\HttpFoundation\Request;
 
 class JsonRequest extends Request
@@ -28,7 +27,7 @@ class JsonRequest extends Request
    */
   public function get($key, $default = null)
   {
-    if (array_key_exists($key, $this->jsonContent)) {
+    if (isset($this->jsonContent[$key])) {
       return $this->jsonContent[$key];
     }
 
@@ -55,7 +54,7 @@ class JsonRequest extends Request
    */
   public function has($key)
   {
-    return array_key_exists($key, $this->jsonContent) || $this->query->has($key);
+    return isset($key, $this->jsonContent) || $this->query->has($key);
   }
 
   /**
@@ -72,13 +71,5 @@ class JsonRequest extends Request
   public function all()
   {
     return array_merge($this->query->all(), $this->jsonContent);
-  }
-
-  /**
-   * @return null|Session
-   */
-  public function getSession()
-  {
-    return parent::getSession();
   }
 }

@@ -8,10 +8,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class MentionFormatter implements FormatterInterface
 {
-  /** @var [] */
+  /**
+   * @var []
+   */
   private $frontendSlackIds;
 
-  /** @var [] */
+  /**
+   * @var []
+   */
   private $backendSlackIds;
 
   public function __construct($frontendSlackIds, $backendSlackIds)

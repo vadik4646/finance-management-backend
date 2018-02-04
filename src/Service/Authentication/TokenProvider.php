@@ -43,7 +43,7 @@ class TokenProvider
    * @param Request $request
    * @return bool
    */
-  public function hasInRequest(Request $request)
+  public function isInRequest(Request $request)
   {
     return $request->headers->has(self::TOKEN_KEY) || $request->cookies->has(self::TOKEN_KEY);
   }

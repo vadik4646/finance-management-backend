@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Service\Authentication\TokenProvider;
+use stdClass;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -14,10 +15,29 @@ class ApiResponse
   const HTTP_BAD_REQUEST  = 400;
   const HTTP_UNAUTHORIZED = 401;
 
+  /**
+   * @var int
+   */
   private $code = self::HTTP_OK;
-  private $message = '';
+
+  /**
+   * @var string|null
+   */
+  private $message = null;
+
+  /**
+   * @var array
+   */
   private $data = [];
-  private $validationErrors = [];
+
+  /**
+   * @var string|null
+   */
+  private $validationErrors = null;
+
+  /**
+   * @var string|null
+   */
   private $token;
 
   /**
@@ -58,16 +78,18 @@ class ApiResponse
    */
   public function get()
   {
-    $response = [];
-    if ($this->message) {
-      $response['message'] = $this->message;
+    $response = new stdClass();
+    if (isset($this->message)) {
+      $response->message = $this->message;
     }
 
-    if ($this->validationErrors) {
-      $response['validationErrors'] = $this->validationErrors;
+    if (isset($this->validationErrors)) {
+      $response->validationErrors = $this->validationErrors;
     }
 
-    $response['data'] = $this->data;
+    if (!empty($this->data)) {
+      $response->data = $this->data;
+    }
 
     $jsonResponse = new JsonResponse($response, $this->code);
 

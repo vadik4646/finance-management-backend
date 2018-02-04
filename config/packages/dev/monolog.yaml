@@ -18,6 +18,6 @@ monolog:
             type: slack
             token: '%env(SLACK_TOKEN)%'
             channel: '#logs'
-            level: NOTICE
+            level: WARNING
             bot_name: '%env(ENV_NAME)%'
             formatter: app.monolog.mention_formatter
