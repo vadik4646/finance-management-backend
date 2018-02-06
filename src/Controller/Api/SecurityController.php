@@ -65,7 +65,7 @@ class SecurityController extends Controller
     $entityManager = $this->getDoctrine()->getManager();
     $entityManager->persist($user);
     $entityManager->flush();
-    $this->get('app.security.authentication_manager')->authenticate($user, $response);
+    $this->get('app.security.authentication_manager')->authenticate($user, $request);
 
     return $response->setMessage('You have been registered successfully')->get();
   }
