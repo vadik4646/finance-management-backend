@@ -37,6 +37,11 @@ class Token
   private $country;
 
   /**
+   * @ORM\Column(type="datetime")
+   */
+  private $lastActionAt;
+
+  /**
    * @return string
    */
   public function getId()
@@ -98,5 +103,31 @@ class Token
   public function setCountry($country): void
   {
     $this->country = $country;
+  }
+
+  /**
+   * @ORM\PrePersist()
+   */
+  public function setDateTimeValues()
+  {
+    $now = new \DateTime();
+    $this->lastActionAt = $now;
+    $this->createdAt = $now;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getLastActionAt()
+  {
+    return $this->lastActionAt;
+  }
+
+  /**
+   * @param mixed $lastActionAt
+   */
+  public function setLastActionAt($lastActionAt): void
+  {
+    $this->lastActionAt = $lastActionAt;
   }
 }

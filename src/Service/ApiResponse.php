@@ -2,10 +2,8 @@
 
 namespace App\Service;
 
-use App\Service\Authentication\TokenProvider;
 use stdClass;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ApiResponse
@@ -34,11 +32,6 @@ class ApiResponse
    * @var string|null
    */
   private $validationErrors = null;
-
-  /**
-   * @var string|null
-   */
-  private $token;
 
   /**
    * @param int $code
@@ -91,11 +84,7 @@ class ApiResponse
       $response->data = $this->data;
     }
 
-    $jsonResponse = new JsonResponse($response, $this->code);
-
-    $this->buildAuthenticationHeaders($jsonResponse);
-
-    return $jsonResponse;
+    return new JsonResponse($response, $this->code);
   }
 
   /**
@@ -108,28 +97,6 @@ class ApiResponse
     $this->validationErrors = $this->getErrorMessages($form);
 
     return $this;
-  }
-
-  /**
-   * @param string $token
-   * @return ApiResponse
-   */
-  public function setAuthenticationToken($token)
-  {
-    $this->token = $token;
-
-    return $this;
-  }
-
-  /**
-   * @param JsonResponse $response
-   */
-  private function buildAuthenticationHeaders(JsonResponse $response)
-  {
-    if (!empty($this->token)) {
-      $response->headers->add([TokenProvider::TOKEN_KEY => $this->token]);
-      $response->headers->setCookie(new Cookie(TokenProvider::TOKEN_KEY, $this->token));
-    }
   }
 
   /**

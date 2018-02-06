@@ -2,11 +2,10 @@
 
 namespace App\Service\Authentication;
 
+use App\Entity\Token;
 use App\Service\ApiResponse;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Utils\RequestAttributeKey;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -15,22 +14,16 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class TokenAuthenticator extends AbstractGuardAuthenticator
 {
-  private $tokenProvider;
+  private $tokenManager;
 
   private $publicRoutes = ['register', 'login', 'tags', 'categories', 'welcome', 'append_error'];
 
   private $environment;
 
-  /**
-   * @var EntityManagerInterface
-   */
-  private $entityManager;
-
-  public function __construct(TokenProvider $tokenProvider, EntityManagerInterface $entityManager, $environment)
+  public function __construct(TokenManager $tokenManager, $environment)
   {
-    $this->tokenProvider = $tokenProvider;
+    $this->tokenManager = $tokenManager;
     $this->environment = $environment;
-    $this->entityManager = $entityManager;
   }
 
   /**
@@ -49,8 +42,11 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
    */
   public function getCredentials(Request $request)
   {
+    $token = $this->tokenManager->getFromRequest($request);
+    $request->attributes->set(RequestAttributeKey::TOKEN, $token);
+
     return [
-      'token' => $this->tokenProvider->getFromRequest($request)
+      'token' => $token
     ];
   }
 
@@ -61,17 +57,14 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
    */
   public function getUser($credentials, UserProviderInterface $userProvider)
   {
+    /** @var Token $token */
     $token = $credentials['token'];
 
     if (null === $token) {
       return null;
     }
 
-    if ($this->environment === 'dev' && $token === 'dev') {
-      return $userProvider->loadUserByUsername('dev@dev.com');
-    }
-
-    return $userProvider->loadUserByUsername($token);
+    return $token->getUser();
   }
 
   public function checkCredentials($credentials, UserInterface $user)
@@ -81,7 +74,6 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
   public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
   {
-    // todo regenerate if updated at > 1hour
     return null;
   }
 
@@ -91,12 +83,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
       return null;
     }
 
-    $response = new ApiResponse();
-
-    return $response
-      ->setCode(ApiResponse::HTTP_UNAUTHORIZED)
-      ->setMessage("You should be logged in to perform this action")
-      ->get();
+    return $this->unauthorizedResponse();
   }
 
   /**
@@ -104,15 +91,19 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
    */
   public function start(Request $request, AuthenticationException $authException = null)
   {
-    $data = [
-      'message' => 'Authentication Required'
-    ];
-
-    return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
+    return $this->unauthorizedResponse();
   }
 
   public function supportsRememberMe()
   {
     return false;
+  }
+
+  private function unauthorizedResponse()
+  {
+    return (new ApiResponse())
+      ->setCode(ApiResponse::HTTP_UNAUTHORIZED)
+      ->setMessage('You should be logged in to perform this action')
+      ->get();
   }
 }

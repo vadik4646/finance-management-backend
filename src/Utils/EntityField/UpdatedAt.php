@@ -3,19 +3,20 @@
 namespace App\Utils\EntityField;
 
 use App\Annotation\Fetcher;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 trait UpdatedAt
 {
   /**
-   * @var \DateTime
+   * @var DateTime
    * @ORM\Column(type="datetime", nullable=true)
    * @Fetcher()
    */
   private $updatedAt = null;
 
   /**
-   * @return \DateTime
+   * @return DateTime
    */
   public function getUpdatedAt()
   {
@@ -23,9 +24,9 @@ trait UpdatedAt
   }
 
   /**
-   * @param \DateTime $updatedAt
+   * @param DateTime $updatedAt
    */
-  public function setUpdatedAt(\DateTime $updatedAt)
+  public function setUpdatedAt(DateTime $updatedAt)
   {
     $this->updatedAt = $updatedAt;
   }
@@ -36,5 +37,10 @@ trait UpdatedAt
   public function setUpdatedAtValue()
   {
     $this->createdAt = new \DateTime();
+  }
+
+  public function updateLastAction()
+  {
+    $this->lastActionAt = new DateTime();
   }
 }

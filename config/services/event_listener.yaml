@@ -12,3 +12,10 @@ services:
             - '%kernel.environment%'
         tags:
              - { name: kernel.event_listener, event: kernel.terminate }
+
+    app.event_listener.token_regenerator:
+        class: App\EventListener\TokenRegeneration
+        arguments:
+            - '@doctrine.orm.default_entity_manager'
+        tags:
+             - { name: kernel.event_listener, event: kernel.response }

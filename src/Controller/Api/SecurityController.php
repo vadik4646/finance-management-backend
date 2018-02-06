@@ -28,9 +28,19 @@ class SecurityController extends Controller
       return $response->setMessage('Invalid credentials')->setCode(ApiResponse::HTTP_BAD_REQUEST)->get();
     }
 
-    $this->get('app.security.authentication_manager')->authenticate($user, $response);
+    $this->get('app.security.authentication_manager')->authenticate($user, $request);
 
     return $response->setMessage('You have been logged in successfully')->get();
+  }
+
+  /**
+   * @Route("/logout", name="logout", methods={"GET"})
+   */
+  public function logoutAction(JsonRequest $request, ApiResponse $response)
+  {
+    $this->get('app.security.authentication_manager')->logout($request);
+
+    return $response->setMessage('You have been logged out successfully')->get();
   }
 
   /**

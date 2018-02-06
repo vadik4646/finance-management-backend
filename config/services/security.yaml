@@ -2,24 +2,17 @@ services:
     app.security.token_authenticator:
         class: App\Service\Authentication\TokenAuthenticator
         arguments:
-            - '@app.security.token_provider'
-            - '@doctrine.orm.default_entity_manager'
+            - '@app.security.token_manager'
             - '%kernel.environment%'
 
-    app.security.token_provider:
-        class: App\Service\Authentication\TokenProvider
+    app.security.token_manager:
+        class: App\Service\Authentication\TokenManager
         arguments:
-            - '@request_stack'
             - '@doctrine.orm.default_entity_manager'
-
-    app.security.user_by_token_provider:
-        class: App\Service\Authentication\UserByTokenProvider
-        arguments:
-            - '@doctrine.orm.entity_manager'
 
     app.security.authentication_manager:
         public: true
         class: App\Service\Authentication\AuthenticationManager
         arguments:
+            - '@app.security.token_manager'
             - '@security.token_storage'
-            - '@app.security.token_provider'
